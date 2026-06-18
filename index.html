@@ -253,8 +253,15 @@
       list.appendChild(el);
     });
   });
-  map.fitBounds(bounds, {padding:[40,40]});
+  // Re-fit after the (often lazy-loaded / late-sized) iframe settles, so the map
+  // always opens on the full regional view instead of over-zoomed.
+  function fitAll(){ map.invalidateSize(); map.fitBounds(bounds, {padding:[30,30]}); }
+  fitAll();
   markers[0].openPopup();
+  setTimeout(fitAll, 400);
+  setTimeout(fitAll, 1200);
+  window.addEventListener('load', fitAll);
+  window.addEventListener('resize', fitAll);
 </script>
 </body>
 </html>
