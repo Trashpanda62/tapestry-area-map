@@ -63,6 +63,7 @@
         <span><i class="dot" style="background:var(--blue)"></i>Lake &amp; water</span>
         <span><i class="dot" style="background:var(--green2)"></i>Parks &amp; nature</span>
         <span><i class="dot" style="background:var(--brown)"></i>History</span>
+        <span><i class="dot" style="background:#d4803a"></i>Food</span>
         <span><i class="dot" style="background:var(--plum)"></i>Town</span>
       </div>
       <div id="list"></div>
@@ -74,7 +75,7 @@
 <script>
   var CAT = {
     home:{c:'var(--home)'}, water:{c:'#3f7fa6'}, park:{c:'#6b8e4e'},
-    history:{c:'#8a6a44'}, town:{c:'#7b5d77'}
+    history:{c:'#8a6a44'}, food:{c:'#d4803a'}, town:{c:'#7b5d77'}
   };
   var HOME = [36.456, -85.176];
   var PLACES = [
@@ -175,7 +176,39 @@
     {n:'Gainesboro', cat:'town', icon:'🏘️', at:[36.3539,-85.6608], mins:'~30 min',
      d:'Quaint Jackson County seat on the Cumberland River with a historic square.'},
     {n:'Red Boiling Springs', cat:'town', icon:'♨️', at:[36.5328,-85.8514], mins:'~45 min',
-     d:'Historic mineral-springs town with restored early-1900s healing-water hotels.'}
+     d:'Historic mineral-springs town with restored early-1900s healing-water hotels.'},
+
+    // ── round 3 (2026-06-18): more marinas, smaller waterfalls, local eats ──
+    {n:'Star Point Resort & Marina', cat:'water', icon:'⛴️', at:[36.602,-85.318], mins:'~25 min',
+     d:'Dale Hollow resort with boat rentals, lakeside lodging & a grill.'},
+    {n:'Eagle Cove Marina', cat:'water', icon:'⚓', at:[36.624,-85.302], mins:'~30 min',
+     d:'Full-service Dale Hollow marina — rentals, slips & ship store.'},
+    {n:'Horse Creek Resort & Marina', cat:'water', icon:'🚤', at:[36.582,-85.432], mins:'~30 min',
+     d:'Celina-side marina with cabins, slips & boat rentals.'},
+    {n:'Hendricks Creek Resort', cat:'water', icon:'🛥️', at:[36.658,-85.302], mins:'~35 min',
+     d:'Lakeside resort marina with houseboats, cabins & rentals.'},
+    {n:'Sulphur Creek Resort', cat:'water', icon:'🛶', at:[36.700,-85.310], mins:'~40 min',
+     d:'Dale Hollow resort with houseboats, cabins & Mike’s Landing lakeside restaurant.'},
+
+    {n:'Waterloo Falls', cat:'park', icon:'💦', at:[35.969,-85.508], mins:'~50 min',
+     d:'A wide, photogenic falls on Spring Creek near Sparta — easy to reach.'},
+    {n:'Lost Creek Falls', cat:'park', icon:'🌿', at:[35.823,-85.452], mins:'~50 min',
+     d:'A 40-ft falls beside a huge cave mouth in Lost Creek Natural Area (Sparta).'},
+    {n:'Potters Falls', cat:'park', icon:'💧', at:[36.063,-85.430], mins:'~45 min',
+     d:'A scenic Falling Water River falls & swimming hole near Cookeville.'},
+    {n:'Whittaker Falls', cat:'park', icon:'🍃', at:[36.118,-85.205], mins:'~40 min',
+     d:'A pretty, easy-access falls on the Cumberland Plateau near Monterey.'},
+
+    {n:'1806 BBQ', cat:'food', icon:'🍖', at:[36.3835,-85.3235], mins:'~12 min',
+     d:'Hickory-smoked barbecue right on the Livingston courthouse square.'},
+    {n:'Angelina’s Italian Subs', cat:'food', icon:'🥪', at:[36.3905,-85.3115], mins:'~12 min',
+     d:'Italian subs & old-fashioned milkshakes — a nostalgic Livingston favorite.'},
+    {n:'Stover’s Country Kitchen', cat:'food', icon:'🍳', at:[36.3885,-85.3300], mins:'~12 min',
+     d:'Hearty home-style country cooking in a friendly, family atmosphere.'},
+    {n:'Celina 52 Diner', cat:'food', icon:'🍗', at:[36.5520,-85.4558], mins:'~30 min',
+     d:'Classic diner near Dale Hollow — famous for its award-winning fried chicken.'},
+    {n:'Crawdaddy’s West Side Grill', cat:'food', icon:'🦞', at:[36.1628,-85.5050], mins:'~40 min',
+     d:'Long-running Cajun & Creole favorite in downtown Cookeville.'}
   ];
 
   var map = L.map('map', {scrollWheelZoom:false}).setView([36.46,-85.30], 10);
@@ -201,7 +234,7 @@
   }
 
   var CATLABEL = {water:'🌊 Lake & water', park:'🌲 Parks & nature',
-                  history:'🏛️ History & culture', town:'🏘️ Towns'};
+                  history:'🏛️ History & culture', food:'🍽️ Food & dining', town:'🏘️ Towns'};
   var markers=[], bounds=[], byCat={};
   PLACES.forEach(function(p){
     var m = L.marker(p.at, {icon:pinIcon(p)}).addTo(map).bindPopup(popHTML(p));
@@ -209,7 +242,7 @@
     if(p.cat!=='home'){ (byCat[p.cat]=byCat[p.cat]||[]).push(p); }
   });
   var list=document.getElementById('list');
-  ['water','park','history','town'].forEach(function(cat){
+  ['water','park','history','food','town'].forEach(function(cat){
     if(!byCat[cat]) return;
     var h=document.createElement('div'); h.className='grp'; h.textContent=CATLABEL[cat];
     list.appendChild(h);
