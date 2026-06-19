@@ -25,9 +25,14 @@
         box-shadow:0 6px 20px -14px rgba(0,0,0,.3);max-height:500px;overflow:auto;}
   @media(max-width:760px){.side{max-height:none;}}
   .side h3{margin:0 0 10px;font-size:15px;color:var(--green);}
-  .legend{display:flex;flex-wrap:wrap;gap:6px 12px;margin-bottom:12px;font-size:12px;color:var(--mut);
-          font-family:Arial,sans-serif;}
-  .legend span{display:inline-flex;align-items:center;gap:5px;}
+  .hint{margin:0 0 8px;font-size:11.5px;color:var(--mut);font-style:italic;font-family:Arial,sans-serif;}
+  .legend{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px;font-family:Arial,sans-serif;}
+  .lg{display:inline-flex;align-items:center;gap:5px;font-size:12px;color:var(--ink);cursor:pointer;
+      background:#fff;border:1px solid var(--line);border-radius:14px;padding:3px 9px;line-height:1.4;
+      transition:opacity .12s,background .12s,border-color .12s;}
+  .lg:hover{border-color:var(--green2);background:var(--cream);}
+  .lg.off{opacity:.4;}
+  .lg-all{font-weight:700;color:var(--green);}
   .dot{width:11px;height:11px;border-radius:50%;display:inline-block;border:2px solid #fff;
        box-shadow:0 0 0 1px rgba(0,0,0,.15);}
   .grp{font-family:Arial,sans-serif;font-weight:700;font-size:12px;color:var(--green);
@@ -59,12 +64,14 @@
     <div id="map"></div>
     <div class="side">
       <h3>Nearby favorites</h3>
-      <div class="legend">
-        <span><i class="dot" style="background:var(--blue)"></i>Lake &amp; water</span>
-        <span><i class="dot" style="background:var(--green2)"></i>Parks &amp; nature</span>
-        <span><i class="dot" style="background:var(--brown)"></i>History</span>
-        <span><i class="dot" style="background:#d4803a"></i>Food</span>
-        <span><i class="dot" style="background:var(--plum)"></i>Town</span>
+      <p class="hint">Tap a category to filter the map</p>
+      <div class="legend" id="legend">
+        <button class="lg" data-cat="water"><i class="dot" style="background:var(--blue)"></i>Lake &amp; water</button>
+        <button class="lg" data-cat="park"><i class="dot" style="background:var(--green2)"></i>Parks &amp; nature</button>
+        <button class="lg" data-cat="history"><i class="dot" style="background:var(--brown)"></i>History</button>
+        <button class="lg" data-cat="food"><i class="dot" style="background:#d4803a"></i>Food</button>
+        <button class="lg" data-cat="town"><i class="dot" style="background:var(--plum)"></i>Town</button>
+        <button class="lg lg-all" data-cat="all">Show all</button>
       </div>
       <div id="list"></div>
     </div>
@@ -242,16 +249,56 @@
     if(p.cat!=='home'){ (byCat[p.cat]=byCat[p.cat]||[]).push(p); }
   });
   var list=document.getElementById('list');
-  ['water','park','history','food','town'].forEach(function(cat){
+  var CATS=['water','park','history','food','town'];
+  var grpEl={};
+  CATS.forEach(function(cat){
     if(!byCat[cat]) return;
-    var h=document.createElement('div'); h.className='grp'; h.textContent=CATLABEL[cat];
-    list.appendChild(h);
+    var h=document.createElement('div'); h.className='grp'; h.dataset.cat=cat; h.textContent=CATLABEL[cat];
+    list.appendChild(h); grpEl[cat]=h;
     byCat[cat].forEach(function(p){
-      var el=document.createElement('div'); el.className='item';
+      var el=document.createElement('div'); el.className='item'; el.dataset.cat=cat;
       el.innerHTML='<div class="nm">'+p.icon+' '+p.n+'</div><div class="meta">'+p.mins+'</div>';
       el.onclick=function(){ map.setView(p.at,12); p._m.openPopup(); };
       list.appendChild(el);
     });
+  });
+
+  // ── category filtering (legend chips) ──
+  var active={}; CATS.forEach(function(c){active[c]=true;});
+  function applyFilter(){
+    CATS.forEach(function(cat){
+      var on=active[cat];
+      (byCat[cat]||[]).forEach(function(p){
+        if(on){ if(!map.hasLayer(p._m)) p._m.addTo(map); }
+        else  { if(map.hasLayer(p._m)) map.removeLayer(p._m); }
+      });
+      if(grpEl[cat]) grpEl[cat].style.display=on?'':'none';
+    });
+    list.querySelectorAll('.item').forEach(function(el){
+      el.style.display=active[el.dataset.cat]?'':'none';
+    });
+    document.querySelectorAll('.lg[data-cat]').forEach(function(b){
+      var c=b.dataset.cat;
+      if(c==='all') return;
+      b.classList.toggle('off', !active[c]);
+    });
+    // re-fit to whatever is showing (home always counts)
+    var b=[HOME];
+    CATS.forEach(function(cat){ if(active[cat]) (byCat[cat]||[]).forEach(function(p){b.push(p.at);}); });
+    if(b.length>1) map.fitBounds(b,{padding:[30,30],maxZoom:11});
+  }
+  document.getElementById('legend').addEventListener('click',function(e){
+    var btn=e.target.closest('.lg'); if(!btn) return;
+    var cat=btn.dataset.cat;
+    var isolated = CATS.every(function(c){ return c===cat ? active[c] : !active[c]; });
+    if(cat==='all' || isolated){
+      // "Show all", or tapping the already-isolated category → reset to everything
+      CATS.forEach(function(c){active[c]=true;});
+    } else {
+      // isolate to just this category
+      CATS.forEach(function(c){active[c]=(c===cat);});
+    }
+    applyFilter();
   });
   // Re-fit after the (often lazy-loaded / late-sized) iframe settles, so the map
   // always opens on the full regional view instead of over-zoomed.
