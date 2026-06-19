@@ -48,8 +48,18 @@
   .pin{display:flex;align-items:center;justify-content:center;width:30px;height:30px;border-radius:50% 50% 50% 0;
        transform:rotate(-45deg);border:2px solid #fff;box-shadow:0 2px 5px rgba(0,0,0,.4);font-size:14px;}
   .pin span{transform:rotate(45deg);}
-  .pop{font-family:Arial,sans-serif;}
+  .pop{font-family:Arial,sans-serif;max-width:230px;}
+  .pop .pi{display:block;width:100%;height:120px;object-fit:cover;border-radius:8px;margin:0 0 7px;
+           background:var(--cream);}
   .pop .pn{font-weight:700;font-size:14px;color:var(--green);}
+  /* pinned "directions home" card at the top of the sidebar */
+  .pinned{background:#fbf6e9;border:1px solid #e6d9b3;border-left:4px solid var(--home);
+          border-radius:12px;padding:11px 13px;margin-bottom:12px;font-family:Arial,sans-serif;}
+  .pinned .pn-t{font-weight:800;font-size:13.5px;color:var(--home);cursor:pointer;}
+  .pinned .pn-d{font-size:11.5px;color:var(--mut);margin:4px 0 9px;line-height:1.4;}
+  .pinned .pn-b{display:inline-block;background:var(--home);color:#fff;font-size:12.5px;font-weight:700;
+                text-decoration:none;border-radius:9px;padding:7px 12px;}
+  .pinned .pn-b:hover{filter:brightness(1.08);}
   .pop .pc{display:inline-block;font-size:10.5px;color:#fff;border-radius:10px;padding:1px 8px;margin:4px 0;}
   .pop .pd{font-size:12.5px;color:var(--ink);margin:3px 0 6px;line-height:1.35;}
   .pop a{font-size:12.5px;font-weight:700;color:var(--blue);text-decoration:none;}
@@ -89,7 +99,7 @@
     history:{c:'#8a6a44'}, food:{c:'#d4803a'}, fun:{c:'#c2557a'},
     shop:{c:'#b8923a'}, town:{c:'#7b5d77'}
   };
-  var HOME = [36.456, -85.176];
+  var HOME = [36.4973, -85.2460]; // 396 Taylor Crossroads Rd, Monroe TN
   var PLACES = [
     {n:'Tapestry Acres', cat:'home', icon:'🏡', at:HOME, mins:'', d:'You are here — home base for your stay.'},
 
@@ -262,10 +272,14 @@
      d:'40+ vendors of antiques, fudge, candles, leather & local crafts on Highway 127.'},
     {n:'Livingston Square Shops', cat:'shop', icon:'🛍️', at:[36.3833,-85.3233], mins:'~12 min',
      q:'Livingston town square, Livingston, TN',
-     d:'Historic courthouse square — antiques, boutiques, coffee & colorful hand-painted murals.'}
+     d:'Historic courthouse square — antiques, boutiques, coffee & colorful hand-painted murals.'},
+
+    {n:'Downtown Monterey', cat:'town', icon:'🚉', at:[36.1462,-85.2658], mins:'~30 min',
+     q:'Downtown Monterey, TN',
+     d:'Cumberland Plateau railroad town — historic depot, the Standing Stone monument, cafés & antiques; gateway to Bee Rock, Whittaker Falls & Muddy Pond.'}
   ];
 
-  var map = L.map('map', {scrollWheelZoom:false}).setView([36.46,-85.30], 10);
+  var map = L.map('map', {scrollWheelZoom:true}).setView([36.46,-85.30], 10);
   L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
     attribution:'&copy; OpenStreetMap &copy; CARTO', maxZoom:18
   }).addTo(map);
@@ -275,6 +289,9 @@
       '<div class="pin" style="background:'+CAT[p.cat].c+'"><span>'+p.icon+'</span></div>',
       iconSize:[30,30], iconAnchor:[15,28], popupAnchor:[0,-26]});
   }
+  // RV-safe route TO the farm — forces the TN-294 / Old Stover Rd approach and
+  // avoids the steep, posted-no-truck Jaybird Rd that the default GPS route takes.
+  var SAFE_DIR = 'https://www.google.com/maps/dir/?api=1&destination=396+Taylor+Crossroads+Rd,+Monroe,+TN+38573&waypoints=Old+Stover+Rd,+Monroe,+TN';
   function dirUrl(p){
     // Named businesses carry a text query so Google geocodes the exact storefront
     // even though the pin is placed approximately; everything else routes to coords.
@@ -284,9 +301,11 @@
   function popHTML(p){
     var chip = p.cat==='home' ? '' :
       '<span class="pc" style="background:'+CAT[p.cat].c+'">'+(p.mins||'')+'</span><br>';
-    var link = p.cat==='home' ? '' :
-      '<a href="'+dirUrl(p)+'" target="_blank" rel="noopener">Get directions →</a>';
-    return '<div class="pop"><div class="pn">'+p.n+'</div>'+chip+
+    var img = p.img ? '<img class="pi" src="'+p.img+'" alt="'+p.n+'" loading="lazy">' : '';
+    var link = p.cat==='home'
+      ? '<a href="'+SAFE_DIR+'" target="_blank" rel="noopener">🚐 RV-safe directions to the farm →</a>'
+      : '<a href="'+dirUrl(p)+'" target="_blank" rel="noopener">Get directions →</a>';
+    return '<div class="pop">'+img+'<div class="pn">'+p.n+'</div>'+chip+
            '<div class="pd">'+p.d+'</div>'+link+'</div>';
   }
 
@@ -300,6 +319,13 @@
     if(p.cat!=='home'){ (byCat[p.cat]=byCat[p.cat]||[]).push(p); }
   });
   var list=document.getElementById('list');
+  // Pinned at the very top: RV-safe directions back to the farm.
+  var pin=document.createElement('div'); pin.className='pinned';
+  pin.innerHTML='<div class="pn-t">📍 Directions to Tapestry Acres</div>'+
+    '<div class="pn-d">RVs &amp; large rigs: take the safe TN-294 / Old Stover Rd route — <b>not</b> the steep Jaybird Rd the GPS picks.</div>'+
+    '<a class="pn-b" href="'+SAFE_DIR+'" target="_blank" rel="noopener">🚐 Get RV-safe directions →</a>';
+  pin.querySelector('.pn-t').onclick=function(){ map.setView(HOME,13); PLACES[0]._m.openPopup(); };
+  list.appendChild(pin);
   var CATS=['water','park','history','food','fun','shop','town'];
   var grpEl={};
   CATS.forEach(function(cat){
