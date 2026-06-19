@@ -64,6 +64,8 @@
   .pop .pd{font-size:12.5px;color:var(--ink);margin:3px 0 6px;line-height:1.35;}
   .pop a{font-size:12.5px;font-weight:700;color:var(--blue);text-decoration:none;}
   .leaflet-popup-content{margin:11px 13px;}
+  .credit{margin:12px 2px 0;font-size:10.5px;color:var(--mut);font-family:Arial,sans-serif;
+          font-style:italic;text-align:center;border-top:1px solid var(--line);padding-top:8px;}
 </style>
 </head>
 <body>
@@ -88,6 +90,7 @@
         <button class="lg lg-all" data-cat="all">Show all</button>
       </div>
       <div id="list"></div>
+      <p class="credit">📷 Photos: Wikimedia Commons &amp; the venues’ own websites</p>
     </div>
   </div>
 </div>
@@ -109,7 +112,7 @@
      d:'Free, family-friendly stop below the dam — aquarium & trout-rearing raceways.'},
     {n:'Sunset Marina & Resort', cat:'water', icon:'⛵', at:[36.566,-85.298], mins:'~20 min',
      d:'Boat rentals, dockside dining & lake-house lodging in Allons.'},
-    {n:'Mitchell Creek Marina', cat:'water', icon:'⚓', at:[36.59,-85.34], mins:'~25 min',
+    {n:'Mitchell Creek Marina', img:'img/mitchell-creek.jpg', cat:'water', icon:'⚓', at:[36.59,-85.34], mins:'~25 min',
      d:'Full-service Dale Hollow marina — rentals, ship store & restaurant.'},
     {n:'Willow Grove Resort & Marina', cat:'water', icon:'🚤', at:[36.63,-85.27], mins:'~35 min',
      d:'Lakefront cabins plus pontoon & party-barge rentals.'},
@@ -184,9 +187,9 @@
      d:'Crossville winery with tastings, a market & café on the Upper Cumberland Wine Trail.'},
     {n:'DelMonaco Winery', cat:'history', icon:'🍇', at:[36.137,-85.638], mins:'~45 min',
      d:'Family vineyard & tasting room in Baxter — award-winning Tennessee wines.'},
-    {n:'Cumberland County Playhouse', cat:'history', icon:'🎭', at:[35.948,-85.03], mins:'~50 min',
+    {n:'Cumberland County Playhouse', img:'img/cc-playhouse.jpg', cat:'history', icon:'🎭', at:[35.948,-85.03], mins:'~50 min',
      d:'One of the nation’s largest rural professional theaters, in Crossville.'},
-    {n:'Appalachian Center for Craft', cat:'history', icon:'🎨', at:[36.0925,-85.7547], mins:'~55 min',
+    {n:'Appalachian Center for Craft', img:'img/craft-center.jpg', cat:'history', icon:'🎨', at:[36.0925,-85.7547], mins:'~55 min',
      d:'Working craft studios, gallery & overlook above Center Hill Lake (Smithville).'},
     {n:'Cumberland Homesteads Tower', img:'img/cumberland-homesteads.jpg', cat:'history', icon:'🗼', at:[35.9119,-84.9939], mins:'~50 min',
      d:'1930s New-Deal homestead museum in a striking stone water tower.'},
@@ -201,7 +204,7 @@
      d:'Historic mineral-springs town with restored early-1900s healing-water hotels.'},
 
     // ── round 3 (2026-06-18): more marinas, smaller waterfalls, local eats ──
-    {n:'Star Point Resort & Marina', cat:'water', icon:'⛴️', at:[36.602,-85.318], mins:'~25 min',
+    {n:'Star Point Resort & Marina', img:'img/star-point.jpg', cat:'water', icon:'⛴️', at:[36.602,-85.318], mins:'~25 min',
      d:'Dale Hollow resort with boat rentals, lakeside lodging & a grill.'},
     {n:'Eagle Cove Marina', cat:'water', icon:'⚓', at:[36.624,-85.302], mins:'~30 min',
      d:'Full-service Dale Hollow marina — rentals, slips & ship store.'},
@@ -245,7 +248,7 @@
     {n:'Ralph’s Donut Shop', cat:'food', icon:'🍩', at:[36.1622,-85.5035], mins:'~40 min',
      q:'Ralphs Donut Shop, Cookeville, TN',
      d:'A Cookeville institution since the 1960s — hot glazed doughnuts & strong coffee.'},
-    {n:'Father Tom’s Pub', cat:'food', icon:'🍺', at:[36.1582,-85.4975], mins:'~40 min',
+    {n:'Father Tom’s Pub', img:'img/father-toms.jpg', cat:'food', icon:'🍺', at:[36.1582,-85.4975], mins:'~40 min',
      q:'Father Toms Pub, Cookeville, TN',
      d:'Lively pub near Tennessee Tech — burgers, wings, craft beer & big-game nights.'},
     {n:'Cosmos Grill', cat:'food', icon:'🍳', at:[36.1605,-85.5085], mins:'~40 min',
@@ -261,7 +264,7 @@
     {n:'Red Silo Brewing Co.', cat:'fun', icon:'🍻', at:[36.1618,-85.5042], mins:'~40 min',
      q:'Red Silo Brewing Company, Cookeville, TN',
      d:'Downtown Cookeville craft brewery & taproom pouring local beers.'},
-    {n:'Cumberland Caverns Concerts', cat:'fun', icon:'🎸', at:[35.6486,-85.6386], mins:'~1 hr 15',
+    {n:'Cumberland Caverns Concerts', img:'img/cumberland-caverns.jpg', cat:'fun', icon:'🎸', at:[35.6486,-85.6386], mins:'~1 hr 15',
      d:'“Bluegrass Underground” — live music 333 ft down inside Cumberland Caverns near McMinnville.'},
 
     {n:'Muddy Pond General Store', cat:'shop', icon:'🛒', at:[36.0855,-85.3625], mins:'~40 min',
@@ -270,7 +273,7 @@
     {n:'Cumberland Mtn. General Store', cat:'shop', icon:'🏪', at:[36.0285,-85.0245], mins:'~50 min',
      q:'Cumberland Mountain General Store, Crossville, TN',
      d:'40+ vendors of antiques, fudge, candles, leather & local crafts on Highway 127.'},
-    {n:'Livingston Square Shops', cat:'shop', icon:'🛍️', at:[36.3833,-85.3233], mins:'~12 min',
+    {n:'Livingston Square Shops', img:'img/livingston.jpg', cat:'shop', icon:'🛍️', at:[36.3833,-85.3233], mins:'~12 min',
      q:'Livingston town square, Livingston, TN',
      d:'Historic courthouse square — antiques, boutiques, coffee & colorful hand-painted murals.'},
 
