@@ -70,6 +70,8 @@
         <button class="lg" data-cat="park"><i class="dot" style="background:var(--green2)"></i>Parks &amp; nature</button>
         <button class="lg" data-cat="history"><i class="dot" style="background:var(--brown)"></i>History</button>
         <button class="lg" data-cat="food"><i class="dot" style="background:#d4803a"></i>Food</button>
+        <button class="lg" data-cat="fun"><i class="dot" style="background:#c2557a"></i>Family fun</button>
+        <button class="lg" data-cat="shop"><i class="dot" style="background:#b8923a"></i>Shops</button>
         <button class="lg" data-cat="town"><i class="dot" style="background:var(--plum)"></i>Town</button>
         <button class="lg lg-all" data-cat="all">Show all</button>
       </div>
@@ -82,7 +84,8 @@
 <script>
   var CAT = {
     home:{c:'var(--home)'}, water:{c:'#3f7fa6'}, park:{c:'#6b8e4e'},
-    history:{c:'#8a6a44'}, food:{c:'#d4803a'}, town:{c:'#7b5d77'}
+    history:{c:'#8a6a44'}, food:{c:'#d4803a'}, fun:{c:'#c2557a'},
+    shop:{c:'#b8923a'}, town:{c:'#7b5d77'}
   };
   var HOME = [36.456, -85.176];
   var PLACES = [
@@ -215,7 +218,49 @@
     {n:'Celina 52 Diner', cat:'food', icon:'🍗', at:[36.5520,-85.4558], mins:'~30 min',
      d:'Classic diner near Dale Hollow — famous for its award-winning fried chicken.'},
     {n:'Crawdaddy’s West Side Grill', cat:'food', icon:'🦞', at:[36.1628,-85.5050], mins:'~40 min',
-     d:'Long-running Cajun & Creole favorite in downtown Cookeville.'}
+     d:'Long-running Cajun & Creole favorite in downtown Cookeville.'},
+
+    // ── round 4 (2026-06-18): more local eats + Family fun + Shops & markets ──
+    {n:'The Steel Coop', cat:'food', icon:'🥩', at:[36.3838,-85.3240], mins:'~12 min',
+     q:'The Steel Coop, Livingston, TN',
+     d:'Whiskey-glazed salmon, hand-cut steaks & seafood with weekend live music off the square.'},
+    {n:'Ruby & Lee', cat:'food', icon:'🍽️', at:[36.3825,-85.3228], mins:'~12 min',
+     q:'Ruby and Lee, Livingston, TN',
+     d:'Cozy, locally-owned spot for from-scratch Southern plates near the downtown square.'},
+    {n:'Wayne’s Grill', cat:'food', icon:'🍔', at:[36.3862,-85.3185], mins:'~12 min',
+     q:'Waynes Grill, Livingston, TN',
+     d:'Hometown grill with a full bar, daily specials & a “good food, good times” crowd.'},
+    {n:'Ralph’s Donut Shop', cat:'food', icon:'🍩', at:[36.1622,-85.5035], mins:'~40 min',
+     q:'Ralphs Donut Shop, Cookeville, TN',
+     d:'A Cookeville institution since the 1960s — hot glazed doughnuts & strong coffee.'},
+    {n:'Father Tom’s Pub', cat:'food', icon:'🍺', at:[36.1582,-85.4975], mins:'~40 min',
+     q:'Father Toms Pub, Cookeville, TN',
+     d:'Lively pub near Tennessee Tech — burgers, wings, craft beer & big-game nights.'},
+    {n:'Cosmos Grill', cat:'food', icon:'🍳', at:[36.1605,-85.5085], mins:'~40 min',
+     q:'Cosmos Grill, Cookeville, TN',
+     d:'Local favorite for steaks & American fare with a warm, neighborhood feel.'},
+
+    {n:'Hidden Hollow Park', cat:'fun', icon:'🎡', at:[36.2128,-85.4625], mins:'~40 min',
+     q:'Hidden Hollow Park, Cookeville, TN',
+     d:'Whimsical family park — mini-golf, paddle boats, a petting zoo & a million-light Christmas display.'},
+    {n:'Cane Creek Park', cat:'fun', icon:'🥏', at:[36.1345,-85.5375], mins:'~40 min',
+     q:'Cane Creek Park, Cookeville, TN',
+     d:'Big lakeside city park — paddle-boating, disc golf, a mountain-bike trail & playgrounds.'},
+    {n:'Red Silo Brewing Co.', cat:'fun', icon:'🍻', at:[36.1618,-85.5042], mins:'~40 min',
+     q:'Red Silo Brewing Company, Cookeville, TN',
+     d:'Downtown Cookeville craft brewery & taproom pouring local beers.'},
+    {n:'Cumberland Caverns Concerts', cat:'fun', icon:'🎸', at:[35.6486,-85.6386], mins:'~1 hr 15',
+     d:'“Bluegrass Underground” — live music 333 ft down inside Cumberland Caverns near McMinnville.'},
+
+    {n:'Muddy Pond General Store', cat:'shop', icon:'🛒', at:[36.0855,-85.3625], mins:'~40 min',
+     q:'Muddy Pond General Store, Monterey, TN',
+     d:'Mennonite-country store stocked with bulk foods, jar goods, quilts & handmade furniture.'},
+    {n:'Cumberland Mtn. General Store', cat:'shop', icon:'🏪', at:[36.0285,-85.0245], mins:'~50 min',
+     q:'Cumberland Mountain General Store, Crossville, TN',
+     d:'40+ vendors of antiques, fudge, candles, leather & local crafts on Highway 127.'},
+    {n:'Livingston Square Shops', cat:'shop', icon:'🛍️', at:[36.3833,-85.3233], mins:'~12 min',
+     q:'Livingston town square, Livingston, TN',
+     d:'Historic courthouse square — antiques, boutiques, coffee & colorful hand-painted murals.'}
   ];
 
   var map = L.map('map', {scrollWheelZoom:false}).setView([36.46,-85.30], 10);
@@ -229,7 +274,10 @@
       iconSize:[30,30], iconAnchor:[15,28], popupAnchor:[0,-26]});
   }
   function dirUrl(p){
-    return 'https://www.google.com/maps/dir/?api=1&origin=Tapestry+Acres,+Monroe,+TN&destination='+p.at[0]+','+p.at[1];
+    // Named businesses carry a text query so Google geocodes the exact storefront
+    // even though the pin is placed approximately; everything else routes to coords.
+    var dest = p.q ? encodeURIComponent(p.q) : (p.at[0]+','+p.at[1]);
+    return 'https://www.google.com/maps/dir/?api=1&origin=Tapestry+Acres,+Monroe,+TN&destination='+dest;
   }
   function popHTML(p){
     var chip = p.cat==='home' ? '' :
@@ -241,7 +289,8 @@
   }
 
   var CATLABEL = {water:'🌊 Lake & water', park:'🌲 Parks & nature',
-                  history:'🏛️ History & culture', food:'🍽️ Food & dining', town:'🏘️ Towns'};
+                  history:'🏛️ History & culture', food:'🍽️ Food & dining',
+                  fun:'🎡 Family fun', shop:'🛍️ Shops & markets', town:'🏘️ Towns'};
   var markers=[], bounds=[], byCat={};
   PLACES.forEach(function(p){
     var m = L.marker(p.at, {icon:pinIcon(p)}).addTo(map).bindPopup(popHTML(p));
@@ -249,7 +298,7 @@
     if(p.cat!=='home'){ (byCat[p.cat]=byCat[p.cat]||[]).push(p); }
   });
   var list=document.getElementById('list');
-  var CATS=['water','park','history','food','town'];
+  var CATS=['water','park','history','food','fun','shop','town'];
   var grpEl={};
   CATS.forEach(function(cat){
     if(!byCat[cat]) return;
