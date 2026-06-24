@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#f4f1ea">
+<title>Tapestry Acres — Meet the Herd</title>
+<style>
+  html,body{margin:0;padding:0;height:100%;background:#f4f1ea;overflow:hidden;}
+  iframe{position:fixed;inset:0;width:100%;height:100%;border:0;display:block;}
+</style>
+</head>
+<body>
+<!-- Thin wrapper around the Apps Script web app. Embedding the /exec content in
+     an iframe on this (non-google) origin strips Google's "created by another
+     user" banner, which only appears on direct top-level loads. The game's
+     google.script.run backend (uiNext/uiTag/Drive moves) keeps working inside
+     the frame. Query params (e.g. ?admin=1) are forwarded through. -->
+<iframe id="game" title="Tapestry Acres — Meet the Herd" allow="clipboard-write; fullscreen"></iframe>
+<script>
+  var EXEC = "https://script.google.com/macros/s/AKfycbwZV6h4w5j_K1n4aCO-Cp1w_ZbFGl6caMHS39SKxC0WM0ZQU0GGhhqmHr0LZvQZb5K6/exec";
+  document.getElementById("game").src = EXEC + (location.search || "");
+</script>
+</body>
+</html>
