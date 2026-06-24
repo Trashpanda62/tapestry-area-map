@@ -75,10 +75,23 @@
   footer{margin-top:26px;border-top:1px solid var(--line);padding-top:10px;
     font-size:11px;color:var(--soft);display:flex;justify-content:space-between;}
 
+  .weekhead{font-weight:800;color:var(--accent-2);font-size:14px;margin:14px 0 4px;}
+  table.cal{font-size:12px;}
+  table.cal th,table.cal td{padding:6px 8px;}
+  table.cal .day{font-weight:700;white-space:nowrap;}
+  table.cal .plat{white-space:nowrap;font-weight:700;font-size:11px;}
+  table.cal .plat.ig{color:#c1377f;}
+  table.cal .plat.fb{color:#3b5998;}
+  table.cal .plat.both{color:var(--ink);}
+  table.cal .fmt{color:var(--soft);white-space:nowrap;}
+  .dailynote{font-size:12.5px;background:var(--band);border-radius:6px;padding:8px 12px;margin:8px 0 4px;}
+  .rotate{font-size:12px;color:var(--soft);margin:6px 0 0;}
+
   @media print{
     .page{padding:0 12px;}
     h2{break-after:avoid;}
-    table,.cols,.cadence,.tip{break-inside:avoid;}
+    table,.cols,.cadence,.tip,.dailynote{break-inside:avoid;}
+    .weekhead{break-after:avoid;}
     body{font-size:12.5px;}
   }
   @page{margin:14mm;}
@@ -179,6 +192,38 @@
     </ul>
     <p style="margin-bottom:0;margin-top:8px;">Recurring formats train both the algorithm <i>and</i> the audience &mdash; and they're the cheapest content to make, because the cast never changes.</p>
   </div>
+
+  <h2>5 &middot; Two-week starter calendar</h2>
+  <div class="dailynote"><b>Every day, regardless of the grid:</b> post 1&ndash;3 Instagram <b>Stories</b> &mdash; a quick herd clip, a poll, a "good morning from the farm," or a booking-link sticker. The feed posts below are the planned, made-ahead content.</div>
+
+  <div class="weekhead">Week 1</div>
+  <table class="cal">
+    <thead><tr><th class="day">Day</th><th>Post idea</th><th>Where</th><th>Format</th></tr></thead>
+    <tbody>
+      <tr><td class="day">Mon</td><td><b>Meet the Herd Monday</b> &mdash; spotlight <b>Casper</b> + a "guess which alpaca" Story poll</td><td class="plat both">IG + FB</td><td class="fmt">Reel</td></tr>
+      <tr><td class="day">Tue</td><td>Glamping morning-coffee view at golden hour</td><td class="plat ig">IG</td><td class="fmt">Photo / carousel</td></tr>
+      <tr><td class="day">Wed</td><td>Behind-the-scenes: feeding &amp; morning chores</td><td class="plat both">IG + FB</td><td class="fmt">Story + photo</td></tr>
+      <tr><td class="day">Thu</td><td>"3 things you didn't know about alpacas"</td><td class="plat ig">IG</td><td class="fmt">Carousel</td></tr>
+      <tr><td class="day">Fri</td><td>Repost a guest photo / 5-star review</td><td class="plat both">IG + FB</td><td class="fmt">Photo</td></tr>
+      <tr><td class="day">Sat</td><td>Weekend availability &rarr; "Book your stay"</td><td class="plat both">IG + FB</td><td class="fmt">Story + link</td></tr>
+      <tr><td class="day">Sun</td><td>Firepit / sunset ambiance over the property</td><td class="plat ig">IG</td><td class="fmt">Reel</td></tr>
+    </tbody>
+  </table>
+
+  <div class="weekhead">Week 2</div>
+  <table class="cal">
+    <thead><tr><th class="day">Day</th><th>Post idea</th><th>Where</th><th>Format</th></tr></thead>
+    <tbody>
+      <tr><td class="day">Mon</td><td><b>Meet the Herd Monday</b> &mdash; spotlight <b>Marshmallow</b> + a "name the baby" poll</td><td class="plat both">IG + FB</td><td class="fmt">Reel</td></tr>
+      <tr><td class="day">Tue</td><td>"Things to do near Tapestry" &mdash; link the Explore-the-Area map</td><td class="plat both">FB + IG</td><td class="fmt">Carousel + link</td></tr>
+      <tr><td class="day">Wed</td><td>Alpaca antics &mdash; the herd being silly</td><td class="plat ig">IG</td><td class="fmt">Reel</td></tr>
+      <tr><td class="day">Thu</td><td>RV site spotlight / hookup &amp; setup tour</td><td class="plat both">IG + FB</td><td class="fmt">Carousel</td></tr>
+      <tr><td class="day">Fri</td><td>A day in the life on the farm (the family)</td><td class="plat both">IG + FB</td><td class="fmt">Video / Story</td></tr>
+      <tr><td class="day">Sat</td><td>Guest testimonial graphic + weekend booking nudge</td><td class="plat both">IG + FB</td><td class="fmt">Photo</td></tr>
+      <tr><td class="day">Sun</td><td>Seasonal / local community post</td><td class="plat fb">FB</td><td class="fmt">Photo</td></tr>
+    </tbody>
+  </table>
+  <p class="rotate"><b>Rotate Monday spotlights through the herd:</b> Daisy &middot; Merida &middot; William Wallace &middot; Espresso Bean &middot; Yeti &middot; Olaf &middot; Sven &middot; Bubbles &middot; Goose &middot; Snowflake &mdash; you'll never run out.</p>
 
   <footer>
     <span>Tapestry Acres &mdash; Social Posting Plan</span>
