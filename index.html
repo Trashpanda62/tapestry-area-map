@@ -66,9 +66,19 @@
   .leaflet-popup-content{margin:11px 13px;}
   .credit{margin:12px 2px 0;font-size:10.5px;color:var(--mut);font-family:Arial,sans-serif;
           font-style:italic;text-align:center;border-top:1px solid var(--line);padding-top:8px;}
+  /* ---- embed mode (?embed): warm, full-bleed, sidebar-free — for the game site ---- */
+  body.embed{margin:0;background:transparent}
+  body.embed .head,body.embed .side{display:none}
+  body.embed .wrap{max-width:none;margin:0;padding:0}
+  body.embed .panel{display:block;margin:0;padding:0;border:0;border-radius:0;box-shadow:none;background:transparent}
+  body.embed #map{height:100vh;height:100dvh;width:100%;border-radius:0}
+  body.embed .leaflet-tile-pane{filter:sepia(.34) saturate(.82) brightness(1.05) hue-rotate(-12deg) contrast(.95)}
+  body.embed .leaflet-control-attribution{font-size:9px;background:rgba(251,246,233,.72)}
+  body.embed .leaflet-bar a{background:var(--card,#fbf6e9);color:#33301f;border-color:#e6d9b3}
 </style>
 </head>
 <body>
+<script>if(/[?&]embed\b/.test(location.search))document.body.classList.add('embed');</script>
 <div class="wrap">
   <div class="head">
     <h2>🗺️ Explore the Area</h2>
