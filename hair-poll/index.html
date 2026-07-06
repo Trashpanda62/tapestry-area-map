@@ -90,8 +90,8 @@ var DATA=[{"rank": 1, "frame": 7029, "name": "Joey", "tag": "our cover boy - buc
 var BASE_NAMES=["Pepper", "Maple", "Willow", "Freckles", "Clementine", "Ziggy"];
 function load(k){try{return JSON.parse(localStorage.getItem(k))||{}}catch(e){return {}}}
 function save(k,v){localStorage.setItem(k,JSON.stringify(v))}
-var counts=load("th_votes_v2"),voted=load("th_voted_v2");
-var ncounts=load("tg_name_v2"),nvote=load("tg_namevoted_v2");
+var counts=load("th_votes_v3"),voted=load("th_voted_v3");
+var ncounts=load("tg_name_v3"),nvote=load("tg_namevoted_v3");
 var grid=document.getElementById('grid');
 function renderHair(){
  var total=Object.keys(counts).reduce(function(a,k){return a+(+counts[k]||0)},0)||0;
@@ -107,9 +107,9 @@ function renderHair(){
  });
  grid.querySelectorAll('.btn[data-f]').forEach(function(b){b.onclick=function(){voteHair(+b.getAttribute('data-f'))}});
 }
-function voteHair(f){ if(voted[f])return; voted[f]=1; save("th_voted_v2",voted); counts[f]=(counts[f]||0)+1; save("th_votes_v2",counts); renderHair();
+function voteHair(f){ if(voted[f])return; voted[f]=1; save("th_voted_v3",voted); counts[f]=(counts[f]||0)+1; save("th_votes_v3",counts); renderHair();
  if(POLL_ENDPOINT){post({kind:'hair',id:f})} }
-document.getElementById('reset').onclick=function(){voted={};save("th_voted_v2",voted);renderHair();};
+document.getElementById('reset').onclick=function(){voted={};save("th_voted_v3",voted);renderHair();};
 
 var ng=document.getElementById('namegrid');
 function esc(x){return (''+x).replace(/[<>&"]/g,function(c){return {'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;'}[c];})}
@@ -130,7 +130,7 @@ function renderNames(){
 }
 function voteName(n){ n=(''+n).trim(); if(!n||nvote.pick===n)return; var prev=nvote.pick||null;
  if(prev){ncounts[prev]=Math.max(0,(ncounts[prev]||0)-1); if(BASE_NAMES.indexOf(prev)<0&&ncounts[prev]<=0)delete ncounts[prev];}
- nvote.pick=n; ncounts[n]=(ncounts[n]||0)+1; save("tg_namevoted_v2",nvote); save("tg_name_v2",ncounts); renderNames();
+ nvote.pick=n; ncounts[n]=(ncounts[n]||0)+1; save("tg_namevoted_v3",nvote); save("tg_name_v3",ncounts); renderNames();
  if(POLL_ENDPOINT){post({kind:'name',id:n,prev:prev})} }
 document.getElementById('addname').onsubmit=function(e){e.preventDefault();var el=document.getElementById('newname');var v=el.value.trim();if(!v)return;v=v.charAt(0).toUpperCase()+v.slice(1);el.value='';voteName(v);};
 
