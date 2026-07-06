@@ -1,0 +1,86 @@
+<!doctype html><html lang=en><head><meta charset=utf-8>
+<meta name=viewport content="width=device-width,initial-scale=1">
+<title>Best Hair Contest — Animal Details (for Dani)</title>
+<style>
+:root{--emer:#0b3d2e;--acc:#12805a;--mint:#41cf8e;--cream:#f5f3ea;--gold:#d8ab3a;--ink:#12271d}
+*{box-sizing:border-box}
+body{margin:0;font-family:"Segoe UI",system-ui,Arial,sans-serif;background:#f4f7f4;color:var(--ink);line-height:1.5}
+.wrap{max-width:720px;margin:0 auto;padding:22px 16px 90px}
+h1{color:var(--emer);font-size:25px;margin:4px 0 2px}
+.tag{color:var(--gold);font-weight:800;text-transform:uppercase;letter-spacing:.05em;font-size:12px}
+.intro{background:#fff;border:1px solid #dbe3dc;border-radius:12px;padding:14px 16px;margin:12px 0 18px}
+.ex{background:#fff7e6;border:1px solid #f0deb0;border-radius:10px;padding:10px 13px;margin-top:10px;font-size:13.5px}
+.card{background:#fff;border:1px solid #dbe3dc;border-radius:16px;padding:14px;margin:14px 0;display:flex;gap:14px;flex-wrap:wrap}
+.card img{width:150px;height:188px;object-fit:cover;border-radius:10px;flex:none}
+.fields{flex:1;min-width:230px}
+.hdr{font-weight:800;color:var(--emer);margin:0 0 8px;font-size:16px}
+.hdr small{font-weight:600;color:#7a857d;font-size:12.5px}
+label{display:block;font-size:12.5px;font-weight:700;color:#3a4a41;margin:9px 0 3px}
+input,textarea,select{width:100%;padding:9px 11px;border:1px solid #cdd6ce;border-radius:9px;font-size:14px;font-family:inherit;background:#fbfcfb}
+textarea{min-height:52px;resize:vertical}
+.bar{position:fixed;left:0;right:0;bottom:0;background:#fff;border-top:1px solid #dbe3dc;padding:11px 16px;text-align:center}
+.copy{background:var(--mint);border:0;color:#093021;font-weight:800;padding:12px 26px;border-radius:11px;cursor:pointer;font-size:15px}
+.copy:active{transform:scale(.98)}
+.hint{font-size:12px;color:#66716a;margin:6px 0 0}
+</style></head><body><div class=wrap>
+<div class=tag>Tapestry Acres · for Dani</div>
+<h1>Tell us about each animal 🦙</h1>
+<div class=intro>
+Claude made up placeholder names for the contest and most are wrong! Fill in the <b>real name</b>, what <b>you call them</b>, their <b>sex</b>, and their <b>personality/attitude</b> for each one. Then tap <b>Copy answers</b> at the bottom and text/email them to Steve — we'll fix the poll and write way funnier captions.
+<div class=ex>💡 The kind of detail that's gold (Steve's example): the one currently called "Rusty" is really <b>Bailey</b> — <i>"Bailey the b*tchy."</i> I pre-filled that one so you can see the idea.</div>
+</div>
+<div id=list></div>
+</div>
+<div class=bar>
+ <button class=copy id=copy>📋 Copy all my answers</button>
+ <div class=hint id=hint>Fills your clipboard — then paste into a text to Steve.</div>
+</div>
+<script>
+var A=[
+ ["#1","Joey",7029,{}],
+ ["#2","Ginger Snap",7140,{}],
+ ["#3","The Diva",7057,{}],
+ ["#4","Rusty",7148,{name:"Bailey",nick:"Bailey the b*tchy",sex:"girl"}],
+ ["#5","Fluffernutter",7150,{}],
+ ["#6","Bandit",7136,{}],
+ ["#7","Einstein",7039,{}],
+ ["#8","Puddles",7027,{}],
+ ["#9","Sunny",7128,{}],
+ ["#10","Mohawk",7055,{}],
+ ["BONUS 🐐","the goat (unnamed)",7012,{}]
+];
+var L=document.getElementById('list');
+A.forEach(function(a){
+ var rank=a[0],ph=a[1],fr=a[2],pre=a[3];
+ var el=document.createElement('div');el.className='card';
+ el.innerHTML=
+  '<img loading=lazy src="img/hair_'+fr+'.jpg" alt="'+ph+'">'+
+  '<div class=fields data-fr="'+fr+'" data-rank="'+rank+'" data-ph="'+ph+'">'+
+   '<p class=hdr>'+rank+' <small>&middot; currently &ldquo;'+ph+'&rdquo; &middot; photo '+fr+'</small></p>'+
+   '<label>Real name</label><input class=f-name value="'+(pre.name||'')+'">'+
+   '<label>What you call them / nickname</label><input class=f-nick value="'+(pre.nick||'')+'">'+
+   '<label>Boy or girl?</label><input class=f-sex value="'+(pre.sex||'')+'">'+
+   '<label>Personality &amp; attitude (the fun stuff!)</label><textarea class=f-pers></textarea>'+
+   '<label>Quirks / fun facts (optional)</label><textarea class=f-quirk></textarea>'+
+  '</div>';
+ L.appendChild(el);
+});
+document.getElementById('copy').onclick=function(){
+ var out=["TAPESTRY BEST HAIR CONTEST — ANIMAL DETAILS (from Dani)",""];
+ document.querySelectorAll('.fields').forEach(function(f){
+  var g=function(c){return (f.querySelector(c).value||'').trim();};
+  out.push(f.getAttribute('data-rank')+" (was \""+f.getAttribute('data-ph')+"\", photo "+f.getAttribute('data-fr')+")");
+  out.push("  Real name: "+g('.f-name'));
+  out.push("  Nickname: "+g('.f-nick'));
+  out.push("  Sex: "+g('.f-sex'));
+  out.push("  Personality: "+g('.f-pers'));
+  var q=g('.f-quirk'); if(q) out.push("  Quirks: "+q);
+  out.push("");
+ });
+ var txt=out.join("\n");
+ var done=function(){var h=document.getElementById('hint');h.textContent='✓ Copied! Now paste it into a text to Steve.';};
+ if(navigator.clipboard){navigator.clipboard.writeText(txt).then(done,function(){prompt('Copy your answers:',txt);});}
+ else{prompt('Copy your answers:',txt);}
+};
+</script>
+</body></html>
