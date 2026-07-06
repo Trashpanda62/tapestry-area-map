@@ -107,9 +107,15 @@
   }
   @page{margin:14mm;}
 </style>
+<style>@media print{.topnav{display:none!important}}</style>
 </head>
 <body>
 <div class="page">
+
+  <div class="topnav" style="display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:14px">
+    <a href="https://trashpanda62.github.io/plans/" style="color:#7a8b5a;font-weight:700;text-decoration:none;font-size:14px">📋 All Plans</a>
+    <button onclick="window.print()" style="background:#7a8b5a;color:#fff;border:0;border-radius:8px;padding:7px 15px;font-weight:700;font-size:13px;cursor:pointer">🖨 Print</button>
+  </div>
 
   <header>
     <div class="eyebrow">Tapestry Acres &middot; Marketing</div>
@@ -289,5 +295,6 @@
   </footer>
 
 </div>
+<script>if(new URLSearchParams(location.search).has('print')){addEventListener('load',function(){setTimeout(function(){window.print()},450)})}</script>
 </body>
 </html>

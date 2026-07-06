@@ -32,10 +32,13 @@ ul{padding-left:20px}li{margin:4px 0}
 .btn2{background:#fff;color:var(--emer);border:1px solid #cfe;border-radius:9px;padding:8px 14px;font-weight:700;text-decoration:none;font-size:13px}
 .home{display:inline-block;color:var(--acc);font-weight:700;text-decoration:none;font-size:14px;margin-bottom:8px}
 .home:hover{text-decoration:underline}
+.topnav{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:6px}
+.pbtn{background:var(--acc);color:#fff;border:0;border-radius:8px;padding:7px 14px;font-weight:700;font-size:13px;cursor:pointer;text-decoration:none}
+@media print{.topnav,.bar,.copy,.dl,.hero .btnrow{display:none!important}body{background:#fff}.card,.capbox,.hash,.linkbox{break-inside:avoid}}
 .chk{list-style:none;padding-left:2px}.chk li{margin:5px 0}.chk li:before{content:"\2610  ";font-size:16px}
 </style></head><body><div class=wrap>
 
-<a class=home href="https://trashpanda62.github.io/tapestry-area-map/social-plan.html">← Social Media Home</a>
+<div class=topnav><a class=home href="https://trashpanda62.github.io/tapestry-area-map/social-plan.html" style="margin:0">← Social Media Home</a><button class=pbtn onclick="window.print()">🖨 Print</button></div>
 <div class=tag>Tapestry Acres · for Dani</div>
 <h1>Best Hair Contest — Posting Kit 🦙</h1>
 <p class=note>Everything to post the contest, from your phone. Save the images, copy a caption, post. That's it.</p>
@@ -135,4 +138,5 @@ function cp(t,b){navigator.clipboard&&navigator.clipboard.writeText(t);flash(b);
 function cpEl(id,b){cp(document.getElementById(id).innerText,b);}
 function flash(b){var o=b.textContent;b.textContent='✓ Copied!';setTimeout(function(){b.textContent=o},1500);}
 </script>
+<script>if(new URLSearchParams(location.search).has('print')){addEventListener('load',function(){setTimeout(function(){window.print()},450)})}</script>
 </body></html>
