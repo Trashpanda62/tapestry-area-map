@@ -1,0 +1,107 @@
+{
+  "updated": "2026-07-13",
+  "updatedLabel": "July 13, 2026",
+  "source": "weekly social pulse",
+  "greeting": "Here's where your social stands",
+  "platforms": {
+    "tiktok": {
+      "label": "TikTok",
+      "handle": "@tapestry.acres",
+      "role": "Your growth engine — where new people find the farm",
+      "followers": 11900,
+      "approx": true,
+      "verified": false,
+      "status": "warn",
+      "statusText": "Can't read live count",
+      "plain": "We haven't been able to pull a live number for 6 weeks — TikTok keeps blocking the counter. Last we saw: about 11,900. Top recent video got 146 likes."
+    },
+    "instagram": {
+      "label": "Instagram",
+      "handle": "@tapestryacres",
+      "role": "Your storefront — where guests check you out before booking",
+      "followers": 76,
+      "deltaFollowers": 0,
+      "posts": 109,
+      "engagement": 5.92,
+      "highlights": 0,
+      "status": "warn",
+      "statusText": "Flat this week",
+      "plain": "76 followers, 109 posts, 5.9% engagement — everything is exactly the same as last week. Nothing has moved because nothing has been posted."
+    },
+    "facebook": {
+      "label": "Facebook",
+      "handle": "/tapestryacres",
+      "role": "Your local board — older, nearer, ready to book",
+      "followers": null,
+      "status": "dead",
+      "statusText": "Can't see the numbers",
+      "plain": "Facebook hides these numbers unless you're logged in as the page. The public page shows 12 likes and a bio that still says “moving to TN.”"
+    }
+  },
+  "health": {
+    "daysSinceLastPost": 24,
+    "lastPostDate": "June 19",
+    "status": "alert",
+    "statusText": "Posting has stalled",
+    "plain": "It's been 24 days since your last Instagram post (June 19 — the piglets). The account has gone quiet for 3+ weeks."
+  },
+  "headline": "Two things are colliding this week: your feeds have gone quiet for 24 days, right as farm stays became a mainstream 2026 travel trend. The single best moment to sell overnight stays is here — and nothing is posting.",
+  "actions": [
+    {
+      "level": "now",
+      "title": "Post to Instagram today",
+      "why": "It's been 24 days. Put up one animal clip right now — accounts grow when they post, and yours has been silent for three weeks. Then keep something going every few days."
+    },
+    {
+      "level": "win",
+      "title": "Jump on the farm-stay trend",
+      "why": "Farm stays are officially a big 2026 travel trend this week — Expedia, Booking.com and ABC News all said so. Post a “wake up on the farm” video and tell people they can come visit."
+    },
+    {
+      "level": "todo",
+      "title": "Build your booking path",
+      "why": "Add a Story Highlights row on Instagram (you have none), put one booking link in all three bios pointing at the $50 Alpaca Walk, and make a simple waitlist form for the glamping tents."
+    },
+    {
+      "level": "todo",
+      "title": "Get TikTok counting again",
+      "why": "We've been unable to read your TikTok follower count for six weeks straight. Hook up a counter so your biggest audience is actually being tracked."
+    },
+    {
+      "level": "todo",
+      "title": "Freshen up Facebook",
+      "why": "The bio still says “moving to TN.” Update it, add a booking link, and start sharing posts into local Tennessee travel & RV groups."
+    }
+  ],
+  "signals": [
+    {
+      "icon": "🏕️",
+      "title": "Farm stays & glamping",
+      "trend": "up2",
+      "trendLabel": "Heating up fast",
+      "text": "Just went mainstream for 2026 — Expedia, Booking.com, ABC News and more all named farm stays a top trend this week. Best moment yet to push overnight stays."
+    },
+    {
+      "icon": "🚐",
+      "title": "RV rentals (To The Max)",
+      "trend": "flat",
+      "trendLabel": "Steady",
+      "text": "Holding at about $214 a night across the 2026 guides — a solid, reliable price to rent your Class C at. No change this week."
+    },
+    {
+      "icon": "🎮",
+      "title": "ModReady (mod tool)",
+      "trend": "up1",
+      "trendLabel": "Picking up",
+      "text": "Someone on Reddit asked about the ModReady pack this week and the download page just updated — good sign people are looking for it."
+    }
+  ],
+  "trend": [
+    { "week": "Jun 11", "igFollowers": 74, "igPosts": 107, "igEng": null, "daysQuiet": 0, "tiktok": "14K" },
+    { "week": "Jun 22", "igFollowers": 77, "igPosts": 109, "igEng": 5.68, "daysQuiet": 3, "tiktok": "~11.9K" },
+    { "week": "Jun 29", "igFollowers": 77, "igPosts": 109, "igEng": 5.84, "daysQuiet": 10, "tiktok": "~11.9K" },
+    { "week": "Jul 6",  "igFollowers": 76, "igPosts": 109, "igEng": 5.92, "daysQuiet": 17, "tiktok": "~11.9K" },
+    { "week": "Jul 13", "igFollowers": 76, "igPosts": 109, "igEng": 5.92, "daysQuiet": 24, "tiktok": "~11.9K" }
+  ],
+  "trendNote": "The story in one line: your follower count is flat and the account has gone quiet. Growth stalls when posting stalls — that's the pattern to break."
+}

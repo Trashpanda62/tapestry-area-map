@@ -4,438 +4,492 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Tapestry Acres — Social Media Dashboard</title>
-<meta name="description" content="One-stop social dashboard for Facebook, Instagram & TikTok — live snapshot, weekly demand signals, 5-week trend, ranked priorities, and the full posting playbook.">
+<meta name="description" content="Your one-stop social media manager for Facebook, Instagram & TikTok — live follower cards, a plain-English daily game plan, opportunities, trends, and the full posting playbook.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📊</text></svg>">
 <style>
   :root{
+    --bg:#f4efe6;
+    --card:#ffffff;
     --ink:#2b2620;
-    --soft:#6b6258;
-    --line:#d8cfc2;
-    --accent:#7a8b5a;      /* sage green */
-    --accent-2:#b9824f;    /* warm clay  */
-    --band:#f3efe7;        /* parchment  */
+    --soft:#726a5f;
+    --faint:#a49c8f;
+    --line:#e7dfd3;
+    --line-strong:#d8cfc2;
+    --accent:#6f8452;      /* sage */
+    --accent-ink:#556640;
+    --clay:#b9824f;
+    --band:#f6f2ea;
+    /* semantic */
+    --ok:#4f8a4a;   --ok-bg:#e7f0e2;
+    --warn:#c0872b; --warn-bg:#f7eed9;
+    --alert:#c0492f;--alert-bg:#f8e5df;
+    --dead:#9a9186; --dead-bg:#eee9e0;
+    --radius:16px;
+    --shadow:0 1px 2px rgba(43,38,32,.04), 0 6px 18px rgba(43,38,32,.06);
+    --shadow-hi:0 2px 6px rgba(43,38,32,.06), 0 14px 34px rgba(43,38,32,.12);
+    --sans:"Segoe UI",-apple-system,BlinkMacSystemFont,Helvetica,Arial,sans-serif;
   }
   *{box-sizing:border-box;}
   html,body{margin:0;padding:0;}
   body{
-    font-family:"Segoe UI",-apple-system,Helvetica,Arial,sans-serif;
+    font-family:var(--sans);
     color:var(--ink);
-    line-height:1.45;
-    background:#fff;
-    -webkit-print-color-adjust:exact;
-    print-color-adjust:exact;
+    line-height:1.5;
+    background:
+      radial-gradient(1200px 500px at 80% -10%, #fbf8f2 0%, rgba(251,248,242,0) 60%),
+      var(--bg);
+    -webkit-font-smoothing:antialiased;
+    -webkit-print-color-adjust:exact; print-color-adjust:exact;
   }
-  .page{max-width:820px;margin:0 auto;padding:38px 46px 60px;}
+  .wrap{max-width:960px;margin:0 auto;padding:0 20px 72px;}
 
-  header{border-bottom:3px solid var(--accent);padding-bottom:14px;margin-bottom:22px;}
-  .eyebrow{font-size:11px;letter-spacing:2.5px;text-transform:uppercase;color:var(--accent-2);font-weight:700;margin-bottom:4px;}
-  h1{font-size:27px;margin:0 0 4px;font-weight:800;letter-spacing:-.3px;}
-  .sub{color:var(--soft);font-size:14px;margin:0;}
+  /* ---------- top bar ---------- */
+  .topbar{
+    position:sticky;top:0;z-index:20;
+    background:rgba(244,239,230,.82);backdrop-filter:saturate(1.1) blur(8px);
+    border-bottom:1px solid var(--line);
+  }
+  .topbar-in{max-width:960px;margin:0 auto;padding:11px 20px;display:flex;align-items:center;gap:12px;}
+  .back{color:var(--accent-ink);font-weight:700;text-decoration:none;font-size:14px;display:inline-flex;align-items:center;gap:5px;padding:6px 10px;border-radius:9px;transition:background .15s;}
+  .back:hover{background:#eae3d6;}
+  .topbar .title{font-weight:800;font-size:14px;letter-spacing:-.2px;margin-left:2px;}
+  .topbar .spacer{flex:1;}
+  .updated-pill{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;color:var(--soft);background:#fff;border:1px solid var(--line);padding:5px 10px;border-radius:20px;}
+  .live-dot{width:7px;height:7px;border-radius:50%;background:var(--ok);box-shadow:0 0 0 0 rgba(79,138,74,.5);animation:pulse 2.4s infinite;}
+  @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(79,138,74,.45);}70%{box-shadow:0 0 0 7px rgba(79,138,74,0);}100%{box-shadow:0 0 0 0 rgba(79,138,74,0);}}
+  .btn{font-family:inherit;cursor:pointer;border:1px solid var(--line-strong);background:#fff;color:var(--ink);border-radius:10px;padding:7px 13px;font-weight:700;font-size:13px;transition:background .15s,box-shadow .15s,transform .05s;}
+  .btn:hover{background:var(--band);box-shadow:var(--shadow);}
+  .btn:active{transform:translateY(1px);}
 
-  h2{font-size:15px;text-transform:uppercase;letter-spacing:1.4px;color:var(--accent);margin:26px 0 10px;padding-bottom:5px;border-bottom:1px solid var(--line);}
-  p{margin:6px 0;}
-  .lead{font-size:14.5px;color:var(--ink);background:var(--band);border-left:4px solid var(--accent-2);padding:11px 14px;border-radius:4px;margin:0 0 6px;}
+  /* ---------- hero ---------- */
+  .hero{padding:30px 0 6px;}
+  .eyebrow{font-size:11px;letter-spacing:2.5px;text-transform:uppercase;color:var(--clay);font-weight:800;}
+  .hero h1{font-size:30px;line-height:1.12;letter-spacing:-.8px;font-weight:800;margin:6px 0 4px;}
+  .hero .date{color:var(--soft);font-size:14px;margin:0;}
 
+  /* ---------- section heads ---------- */
+  .sec{margin-top:34px;}
+  .sec-h{display:flex;align-items:center;gap:9px;margin:0 0 14px;}
+  .sec-h h2{font-size:17px;font-weight:800;letter-spacing:-.3px;margin:0;}
+  .sec-h .ic{font-size:18px;}
+  .sec-h .hint{font-size:12.5px;color:var(--faint);font-weight:500;margin-left:auto;}
+
+  /* ---------- KPI cards ---------- */
+  .kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;}
+  .kpi{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:16px 16px 15px;box-shadow:var(--shadow);transition:box-shadow .18s,transform .18s;display:flex;flex-direction:column;min-height:172px;}
+  .kpi:hover{box-shadow:var(--shadow-hi);transform:translateY(-2px);}
+  .kpi .top{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:10px;}
+  .kpi .plat{font-size:13px;font-weight:800;letter-spacing:-.2px;display:flex;align-items:center;gap:7px;}
+  .kpi .plat .badge{width:24px;height:24px;border-radius:7px;display:grid;place-items:center;font-size:13px;color:#fff;font-weight:800;}
+  .kpi.tt .badge{background:#111;} .kpi.ig .badge{background:linear-gradient(135deg,#c1377f,#e6a04a);} .kpi.fb .badge{background:#3b5998;} .kpi.health .badge{background:var(--alert);}
+  .num{font-size:40px;font-weight:800;letter-spacing:-2px;line-height:1;font-variant-numeric:tabular-nums;}
+  .num .unit{font-size:18px;font-weight:800;color:var(--soft);letter-spacing:-.5px;margin-left:1px;}
+  .num .q{font-size:20px;color:var(--faint);}
+  .kpi .sub{font-size:12px;color:var(--soft);margin-top:7px;flex:1;}
+  .kpi .role{font-size:11.5px;color:var(--faint);margin-top:2px;}
+  .pill{display:inline-flex;align-items:center;gap:5px;font-size:10.5px;font-weight:800;letter-spacing:.2px;padding:3px 8px;border-radius:20px;white-space:nowrap;}
+  .pill .d{width:6px;height:6px;border-radius:50%;}
+  .pill.ok{background:var(--ok-bg);color:var(--ok);} .pill.ok .d{background:var(--ok);}
+  .pill.warn{background:var(--warn-bg);color:var(--warn);} .pill.warn .d{background:var(--warn);}
+  .pill.alert{background:var(--alert-bg);color:var(--alert);} .pill.alert .d{background:var(--alert);}
+  .pill.dead{background:var(--dead-bg);color:var(--dead);} .pill.dead .d{background:var(--dead);}
+
+  /* ---------- game plan ---------- */
+  .headline{background:linear-gradient(180deg,#fff, #fdfbf7);border:1px solid var(--line);border-radius:var(--radius);padding:16px 18px;box-shadow:var(--shadow);display:flex;gap:13px;align-items:flex-start;}
+  .headline .flag{font-size:22px;flex:0 0 auto;line-height:1.2;}
+  .headline p{margin:0;font-size:14.5px;line-height:1.5;}
+  .actions{list-style:none;margin:14px 0 0;padding:0;display:flex;flex-direction:column;gap:10px;}
+  .act{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:13px 15px 13px 14px;box-shadow:var(--shadow);display:flex;gap:13px;align-items:flex-start;transition:box-shadow .16s,transform .16s;}
+  .act:hover{box-shadow:var(--shadow-hi);transform:translateY(-1px);}
+  .act .mark{flex:0 0 auto;width:30px;height:30px;border-radius:9px;display:grid;place-items:center;font-size:15px;font-weight:800;color:#fff;}
+  .act.now .mark{background:var(--alert);} .act.win .mark{background:var(--ok);} .act.todo .mark{background:var(--accent);}
+  .act .body{flex:1;}
+  .act .t{font-size:14.5px;font-weight:800;letter-spacing:-.2px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+  .tag{font-size:9.5px;font-weight:800;letter-spacing:.5px;text-transform:uppercase;padding:2px 7px;border-radius:20px;}
+  .tag.now{background:var(--alert-bg);color:var(--alert);} .tag.win{background:var(--ok-bg);color:var(--ok);} .tag.todo{background:var(--band);color:var(--soft);}
+  .act .why{font-size:13px;color:var(--soft);margin-top:3px;}
+
+  /* ---------- signals ---------- */
+  .signals{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;}
+  .sig{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:15px 16px;box-shadow:var(--shadow);transition:box-shadow .16s,transform .16s;}
+  .sig:hover{box-shadow:var(--shadow-hi);transform:translateY(-2px);}
+  .sig .h{display:flex;align-items:center;gap:9px;margin-bottom:8px;}
+  .sig .h .ico{font-size:20px;}
+  .sig .h .nm{font-weight:800;font-size:13.5px;letter-spacing:-.2px;flex:1;}
+  .trendtag{font-size:10px;font-weight:800;letter-spacing:.3px;text-transform:uppercase;padding:3px 8px;border-radius:20px;display:inline-flex;align-items:center;gap:4px;}
+  .trendtag.up2{background:var(--ok-bg);color:var(--ok);} .trendtag.up1{background:#eef3e4;color:var(--accent-ink);} .trendtag.flat{background:var(--band);color:var(--soft);}
+  .sig p{margin:0;font-size:12.5px;color:var(--soft);line-height:1.5;}
+
+  /* ---------- trend chart ---------- */
+  .trendcard{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:18px 20px 16px;box-shadow:var(--shadow);}
+  .chart{display:flex;align-items:flex-end;gap:14px;height:150px;padding:6px 4px 0;}
+  .bar-col{flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;height:100%;justify-content:flex-end;}
+  .bar-val{font-size:12px;font-weight:800;color:var(--accent-ink);font-variant-numeric:tabular-nums;}
+  .bar{width:100%;max-width:46px;background:linear-gradient(180deg,#8aa06a,#6f8452);border-radius:7px 7px 0 0;transform-origin:bottom center;transform:scaleY(0);transition:transform .7s cubic-bezier(.2,.8,.2,1);min-height:3px;position:relative;}
+  .bar-col:last-child .bar{background:linear-gradient(180deg,#cf9a5f,#b9824f);}
+  .bar-wk{font-size:11px;color:var(--soft);font-weight:600;}
+  .quiet{display:flex;gap:14px;margin-top:14px;padding-top:14px;border-top:1px dashed var(--line-strong);}
+  .quiet .q{flex:1;text-align:center;}
+  .quiet .qn{font-size:15px;font-weight:800;color:var(--soft);font-variant-numeric:tabular-nums;}
+  .quiet .qn.hot{color:var(--alert);}
+  .quiet .ql{font-size:10px;color:var(--faint);text-transform:uppercase;letter-spacing:.4px;margin-top:1px;}
+  .trendnote{font-size:12.5px;color:var(--soft);margin:12px 0 0;background:var(--band);border-radius:9px;padding:10px 13px;}
+  .trendnote b{color:var(--ink);}
+
+  /* ---------- playbook divider ---------- */
+  .divider{display:flex;align-items:center;gap:14px;margin:48px 0 8px;}
+  .divider::before,.divider::after{content:"";height:1px;background:var(--line-strong);flex:1;}
+  .divider span{font-size:12px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:var(--clay);}
+  .playbook{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:8px 24px 26px;box-shadow:var(--shadow);margin-top:12px;}
+  .playbook > p.intro{font-size:13.5px;color:var(--soft);margin:18px 0 0;}
+
+  .playbook h3.ph{font-size:14px;text-transform:uppercase;letter-spacing:1px;color:var(--accent-ink);margin:26px 0 10px;padding-bottom:6px;border-bottom:1px solid var(--line);}
+  .playbook p{margin:6px 0;font-size:13.5px;}
   table{width:100%;border-collapse:collapse;margin:8px 0 4px;font-size:13.5px;}
-  th,td{text-align:left;padding:8px 10px;vertical-align:top;}
+  th,td{text-align:left;padding:9px 11px;vertical-align:top;}
   thead th{background:var(--accent);color:#fff;font-size:11px;letter-spacing:.6px;text-transform:uppercase;}
   tbody tr:nth-child(even){background:var(--band);}
-  td.share{font-weight:800;color:var(--accent-2);white-space:nowrap;text-align:center;}
-  .bucket{font-weight:700;}
-  .bucket small{display:block;font-weight:400;color:var(--soft);font-size:12px;margin-top:1px;}
-
-  /* platform role strip */
-  .roles{display:flex;gap:12px;margin:6px 0 2px;flex-wrap:wrap;}
-  .role{flex:1;min-width:200px;border:1px solid var(--line);border-radius:8px;padding:11px 14px;background:#fff;}
-  .role .tag{font-size:11px;font-weight:800;letter-spacing:.6px;text-transform:uppercase;display:block;margin-bottom:3px;}
-  .role.tt .tag{color:#111;}
-  .role.ig .tag{color:#c1377f;}
-  .role.fb .tag{color:#3b5998;}
-  .role p{margin:0;font-size:13px;color:var(--soft);}
-  .role b{color:var(--ink);}
-
-  .cols{display:flex;gap:18px;flex-wrap:wrap;}
-  .col{flex:1;min-width:220px;border:1px solid var(--line);border-radius:8px;padding:14px 16px;}
-  .col h3{margin:0 0 8px;font-size:15px;}
-  .col .tag{font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;}
-  .tt .tag{color:#111;}
-  .ig .tag{color:#c1377f;}
-  .fb .tag{color:#3b5998;}
-  ul{margin:6px 0;padding-left:18px;}
-  li{margin:4px 0;font-size:13.5px;}
-
+  td.share{font-weight:800;color:var(--clay);white-space:nowrap;text-align:center;}
+  .bucket{font-weight:700;} .bucket small{display:block;font-weight:400;color:var(--soft);font-size:12px;margin-top:1px;}
+  .cols{display:flex;gap:16px;flex-wrap:wrap;}
+  .col{flex:1;min-width:220px;border:1px solid var(--line);border-radius:12px;padding:14px 16px;background:#fff;}
+  .col h4{margin:0 0 8px;font-size:14px;}
+  .col .tag2{font-size:11px;font-weight:800;letter-spacing:.8px;text-transform:uppercase;}
+  .tt2{color:#111;} .ig2{color:#c1377f;} .fb2{color:#3b5998;}
+  ul{margin:6px 0;padding-left:18px;} li{margin:4px 0;font-size:13px;}
   .cadence{display:flex;gap:12px;margin-top:6px;flex-wrap:wrap;}
-  .card{flex:1;min-width:120px;text-align:center;background:var(--band);border-radius:8px;padding:12px;}
-  .card .big{font-size:22px;font-weight:800;color:var(--accent);}
-  .card .lbl{font-size:11px;text-transform:uppercase;letter-spacing:1px;color:var(--soft);}
+  .ccard{flex:1;min-width:120px;text-align:center;background:var(--band);border-radius:12px;padding:13px;}
+  .ccard .big{font-size:22px;font-weight:800;color:var(--accent-ink);} .ccard .lbl{font-size:11px;text-transform:uppercase;letter-spacing:1px;color:var(--soft);}
+  .tip{background:#fbf6ee;border:1px solid var(--line-strong);border-radius:12px;padding:14px 16px;margin-top:8px;} .tip b{color:var(--clay);}
+  .weekhead{font-weight:800;color:var(--clay);font-size:14px;margin:18px 0 4px;}
+  table.cal{font-size:12.5px;} table.cal th,table.cal td{padding:8px 10px;} table.cal .day{font-weight:800;white-space:nowrap;width:56px;}
+  table.cal ul{margin:0;padding-left:16px;} table.cal li{margin:3px 0;}
+  .p{font-weight:800;font-size:10.5px;letter-spacing:.3px;} .p.tt{color:#111;} .p.ig{color:#c1377f;} .p.fb{color:#3b5998;} .p.all{color:var(--clay);}
+  .book{color:var(--clay);font-weight:700;}
+  .dailynote{font-size:12.5px;background:var(--band);border-radius:10px;padding:11px 14px;margin:8px 0 4px;}
+  code{font-family:Consolas,Menlo,monospace;font-size:12px;background:var(--band);padding:1px 5px;border-radius:5px;}
 
-  .tip{background:#fbf6ee;border:1px dashed var(--accent-2);border-radius:8px;padding:13px 16px;margin-top:8px;}
-  .tip b{color:var(--accent-2);}
+  footer{margin-top:26px;padding-top:14px;border-top:1px solid var(--line);font-size:11.5px;color:var(--faint);display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;}
 
-  footer{margin-top:26px;border-top:1px solid var(--line);padding-top:10px;font-size:11px;color:var(--soft);display:flex;justify-content:space-between;}
-
-  .weekhead{font-weight:800;color:var(--accent-2);font-size:14px;margin:16px 0 4px;}
-  table.cal{font-size:12.5px;}
-  table.cal th,table.cal td{padding:7px 9px;}
-  table.cal .day{font-weight:800;white-space:nowrap;width:56px;}
-  table.cal ul{margin:0;padding-left:16px;}
-  table.cal li{margin:3px 0;}
-  table.cal .p{font-weight:800;font-size:10.5px;letter-spacing:.3px;}
-  .p.tt{color:#111;} .p.ig{color:#c1377f;} .p.fb{color:#3b5998;} .p.all{color:var(--accent-2);}
-  .book{color:var(--accent-2);font-weight:700;}
-  .dailynote{font-size:12.5px;background:var(--band);border-radius:6px;padding:9px 13px;margin:8px 0 4px;}
-
-  /* ---------- LIVE DASHBOARD ---------- */
-  --ok:#5f8b52; --warn:#c08a2e; --alert:#b04a3d; --dead:#9a9186;
-  .dash{background:#faf7f1;border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin:2px 0 14px;}
-  .dash-top{display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap;margin-bottom:12px;}
-  .dash-top h2{margin:0;border:0;padding:0;font-size:14px;}
-  .asof{font-size:11.5px;color:var(--soft);}
-  .asof b{color:var(--ink);}
-  .snap{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;}
-  .stat{background:#fff;border:1px solid var(--line);border-radius:10px;padding:12px 13px;position:relative;}
-  .stat .plat{font-size:10.5px;font-weight:800;letter-spacing:.5px;text-transform:uppercase;margin-bottom:5px;display:flex;align-items:center;gap:6px;}
-  .stat.tt .plat{color:#111;} .stat.ig .plat{color:#c1377f;} .stat.fb .plat{color:#3b5998;} .stat.gap .plat{color:var(--alert);}
-  .stat .num{font-size:24px;font-weight:800;line-height:1;color:var(--ink);}
-  .stat .num small{font-size:13px;font-weight:700;color:var(--soft);}
-  .stat .meta{font-size:11.5px;color:var(--soft);margin-top:5px;}
-  .dot{width:8px;height:8px;border-radius:50%;display:inline-block;flex:0 0 auto;}
-  .dot.ok{background:var(--ok);} .dot.warn{background:var(--warn);} .dot.alert{background:var(--alert);} .dot.dead{background:var(--dead);}
-  .chip{display:inline-block;font-size:10px;font-weight:800;letter-spacing:.3px;text-transform:uppercase;padding:1px 6px;border-radius:20px;vertical-align:middle;}
-  .chip.flat{background:#efe9dd;color:var(--soft);} .chip.up{background:#e4efdd;color:var(--ok);} .chip.stale{background:#f7ecd6;color:var(--warn);} .chip.alertc{background:#f6dcd7;color:var(--alert);}
-  .alertbar{display:flex;gap:10px;align-items:flex-start;background:#fbeeeb;border:1px solid #e0b4ab;border-radius:8px;padding:11px 14px;margin:12px 0 0;font-size:13px;}
-  .alertbar .ico{font-size:16px;line-height:1.2;}
-  .alertbar b{color:var(--alert);}
-  .signals{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:4px;}
-  .sig{border:1px solid var(--line);border-radius:10px;padding:12px 14px;background:#fff;}
-  .sig .h{font-size:12.5px;font-weight:800;margin-bottom:3px;display:flex;justify-content:space-between;align-items:center;gap:8px;}
-  .sig .arrow{font-size:13px;font-weight:800;}
-  .sig .arrow.up{color:var(--ok);} .sig .arrow.flat{color:var(--soft);}
-  .sig p{margin:0;font-size:12px;color:var(--soft);}
-  table.trend{width:100%;border-collapse:collapse;font-size:12.5px;margin-top:4px;}
-  table.trend th,table.trend td{padding:6px 9px;text-align:center;border-bottom:1px solid var(--line);}
-  table.trend th{background:var(--accent);color:#fff;font-size:10px;letter-spacing:.4px;text-transform:uppercase;}
-  table.trend td:first-child,table.trend th:first-child{text-align:left;font-weight:700;}
-  table.trend tr:last-child td{font-weight:800;background:var(--band);}
-  table.trend .muted{color:var(--soft);font-weight:400;}
-  ol.actions{margin:6px 0 0;padding-left:0;list-style:none;counter-reset:a;}
-  ol.actions li{position:relative;padding:9px 12px 9px 40px;margin:7px 0;border:1px solid var(--line);border-radius:8px;background:#fff;font-size:13px;counter-increment:a;}
-  ol.actions li::before{content:counter(a);position:absolute;left:10px;top:9px;width:20px;height:20px;border-radius:50%;background:var(--accent);color:#fff;font-size:12px;font-weight:800;text-align:center;line-height:20px;}
-  ol.actions li.hot::before{background:var(--alert);} ol.actions li.win::before{background:var(--ok);}
-  ol.actions b{color:var(--ink);}
-  ol.actions .why{display:block;color:var(--soft);font-size:12px;margin-top:2px;}
-
-  @media (max-width:640px){
-    .page{padding:24px 18px 44px;}
-    h1{font-size:22px;}
-    .cols{flex-direction:column;gap:14px;}
-    .roles{flex-direction:column;}
-    .col{padding:13px 15px;}
-    table.cal .day{width:auto;}
-    .snap{grid-template-columns:repeat(2,1fr);}
+  @media (max-width:760px){
+    .kpis{grid-template-columns:repeat(2,1fr);}
     .signals{grid-template-columns:1fr;}
-    table.trend{font-size:11.5px;}
-    table.trend th,table.trend td{padding:5px 5px;}
+    .hero h1{font-size:24px;}
+    .topbar .title{display:none;}
+  }
+  @media (max-width:460px){
+    .kpis{grid-template-columns:1fr;}
+    .chart{gap:8px;} .bar-wk{font-size:10px;}
   }
   @media print{
-    .page{padding:0 12px;}
-    h2{break-after:avoid;}
-    table,.cols,.cadence,.tip,.dailynote,.roles{break-inside:avoid;}
-    .weekhead{break-after:avoid;}
-    body{font-size:12.5px;}
-    .topnav{display:none!important;}
+    .topbar,.btn,.live-dot{display:none!important;}
+    body{background:#fff;} .wrap{padding:0 10px;}
+    .kpi,.act,.sig,.trendcard,.playbook,.headline{box-shadow:none;break-inside:avoid;}
+    .kpis{grid-template-columns:repeat(4,1fr);} .signals{grid-template-columns:repeat(3,1fr);}
+    .divider{margin:26px 0 8px;}
   }
   @page{margin:14mm;}
 </style>
 </head>
 <body>
-<div class="page">
 
-  <div class="topnav" style="display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:14px">
-    <a href="https://trashpanda62.github.io/plans/" style="color:#7a8b5a;font-weight:700;text-decoration:none;font-size:14px">← The Map</a>
-    <button onclick="window.print()" style="background:#7a8b5a;color:#fff;border:0;border-radius:8px;padding:7px 15px;font-weight:700;font-size:13px;cursor:pointer">🖨 Print</button>
+<div class="topbar">
+  <div class="topbar-in">
+    <a class="back" href="https://trashpanda62.github.io/plans/">← The Map</a>
+    <span class="title">Tapestry Acres · Social Dashboard</span>
+    <span class="spacer"></span>
+    <span class="updated-pill"><span class="live-dot"></span>Updated <span id="up-date">—</span></span>
+    <button class="btn" onclick="window.print()">🖨 Print</button>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <div class="hero">
+    <div class="eyebrow">Tapestry Acres · Social Media</div>
+    <h1 id="greeting">Here's where your social stands</h1>
+    <p class="date" id="hero-date">—</p>
   </div>
 
-  <header>
-    <div class="eyebrow">Tapestry Acres &middot; Marketing</div>
-    <h1>Social Media Dashboard</h1>
-    <p class="sub">Live snapshot, weekly demand signals &amp; the full posting playbook &mdash; Facebook, Instagram &amp; TikTok in one place.</p>
-  </header>
+  <!-- KPI CARDS -->
+  <section class="sec">
+    <div class="sec-h"><span class="ic">📈</span><h2>Your three feeds, right now</h2><span class="hint">counts refresh from the daily pulse</span></div>
+    <div class="kpis" id="kpis"></div>
+  </section>
 
-  <!-- ============ LIVE DASHBOARD (auto-updated from the weekly social pulse) ============ -->
-  <div class="dash">
-    <div class="dash-top">
-      <h2>Where the feeds stand right now</h2>
-      <span class="asof">Data as of <b>2026-07-13</b> &middot; from the weekly pulse</span>
+  <!-- GAME PLAN -->
+  <section class="sec">
+    <div class="sec-h"><span class="ic">🎯</span><h2>Today's game plan</h2></div>
+    <div class="headline"><span class="flag">🚩</span><p id="headline">—</p></div>
+    <ol class="actions" id="actions"></ol>
+  </section>
+
+  <!-- OPPORTUNITIES -->
+  <section class="sec">
+    <div class="sec-h"><span class="ic">🌱</span><h2>Opportunities right now</h2><span class="hint">what the wider market is doing</span></div>
+    <div class="signals" id="signals"></div>
+  </section>
+
+  <!-- TREND -->
+  <section class="sec">
+    <div class="sec-h"><span class="ic">📊</span><h2>How you're trending</h2><span class="hint">Instagram followers · last 5 weeks</span></div>
+    <div class="trendcard">
+      <div class="chart" id="chart"></div>
+      <div class="quiet" id="quiet"></div>
+      <p class="trendnote" id="trendnote">—</p>
+    </div>
+  </section>
+
+  <!-- ============ PLAYBOOK (static reference) ============ -->
+  <div class="divider"><span>📋 The full playbook</span></div>
+  <div class="playbook">
+    <p class="intro"><b>The one rule:</b> ~75–90% cute animals, entertainment &amp; connection · ~10–25% “you can stay here.” People follow for the alpacas; they book because the experience and the reviews earned their trust. Everything below is how you run that.</p>
+
+    <h3 class="ph">Each feed has one job</h3>
+    <div class="cols">
+      <div class="col"><span class="tag2 tt2">TikTok · @tapestry.acres</span><p style="margin:4px 0 0;font-size:13px;color:var(--soft)"><b style="color:var(--ink)">The engine.</b> Your real audience lives here. Where new people discover the farm — give it the most time.</p></div>
+      <div class="col"><span class="tag2 ig2">Instagram · @tapestryacres</span><p style="margin:4px 0 0;font-size:13px;color:var(--soft)"><b style="color:var(--ink)">The storefront.</b> Where someone checks “is this place legit?” right before they book.</p></div>
+      <div class="col"><span class="tag2 fb2">Facebook · /tapestryacres</span><p style="margin:4px 0 0;font-size:13px;color:var(--soft)"><b style="color:var(--ink)">The local board.</b> Older, nearer, more ready to book. Events &amp; Tennessee travel/RV groups.</p></div>
     </div>
 
-    <div class="snap">
-      <div class="stat tt">
-        <div class="plat"><span class="dot warn"></span>TikTok &middot; the engine</div>
-        <div class="num">~11.9K<small> ?</small></div>
-        <div class="meta"><span class="chip stale">stale</span> figure unverified 4 wks &mdash; data source down 6 wks. Top video 146 likes.</div>
+    <h3 class="ph">1 · What to post about</h3>
+    <table>
+      <thead><tr><th>Type of post</th><th style="text-align:center">Share</th><th>Why it matters</th></tr></thead>
+      <tbody>
+        <tr><td class="bucket">Animals &amp; the herd<small>baby alpacas, highland-cow treats, antics, pigs &amp; goats</small></td><td class="share">45%</td><td>Your reach engine — the most saves &amp; shares. Built the whole TikTok following. Lead with a cute hook in the <b>first second</b>.</td></tr>
+        <tr><td class="bucket">The stay experience<small>morning with the animals, the view, cabins, glamping, firepit, RV sites</small></td><td class="share">25%</td><td>The “I want to be there” post — this is what actually drives bookings. <b>The pillar you're missing right now.</b></td></tr>
+        <tr><td class="bucket">Behind the scenes<small>chores, births, shearing, weather, the family</small></td><td class="share">15%</td><td>Builds trust — a real place with real people, not a listing.</td></tr>
+        <tr><td class="bucket">Guest photos &amp; reviews<small>reposts, testimonials, tagged stays</small></td><td class="share">10%</td><td>Proof that sells. The cheapest content you'll ever make.</td></tr>
+        <tr><td class="bucket">Booking &amp; local events<small>availability, offers, Food Truck Saturdays, seasonal</small></td><td class="share">5%</td><td>The direct ask — kept light so the feed never feels salesy. Wrap every promo inside an animal moment.</td></tr>
+      </tbody>
+    </table>
+    <p style="font-size:12.5px;color:var(--soft);margin-top:8px;"><b>1 in 4 videos ends on a booking beat</b> pointed at what you can <i>actually</i> sell today — the <b>Alpaca Walk ($50)</b> — or “comment WAITLIST” for the glamping tents. Never imply the tents are bookable yet (still permitting).</p>
+
+    <h3 class="ph">2 · How to run each feed</h3>
+    <div class="cols">
+      <div class="col"><h4><span class="tag2 tt2">TikTok</span> — the growth engine</h4>
+        <ul>
+          <li><b>4–7 posts a week</b> — it rewards volume &amp; consistency.</li>
+          <li><b>Keep it lo-fi.</b> Wrap promos inside an animal moment.</li>
+          <li><b>Cute hook in the first second;</b> use trending sounds.</li>
+          <li><b>Pin 2–3 videos</b> up top (one “book a walk,” one “glamping soon”).</li>
+          <li><b>Reply with a video</b> — free extra reach.</li>
+          <li>Say where you are: “2 hrs from Nashville,” “near Dale Hollow Lake.”</li>
+        </ul>
       </div>
-      <div class="stat ig">
-        <div class="plat"><span class="dot warn"></span>Instagram &middot; storefront</div>
-        <div class="num">76 <span class="chip flat">flat</span></div>
-        <div class="meta">109 posts &middot; 5.92% eng &middot; 0 Highlights. Every metric unchanged vs last week.</div>
+      <div class="col"><h4><span class="tag2 ig2">Instagram</span> — the storefront</h4>
+        <ul>
+          <li><b>3–5 Reels a week</b> + <b>Stories every day.</b></li>
+          <li><b>No watermark</b> — export from CapCut/originals, never a TikTok download.</li>
+          <li><b>Re-write the caption</b> for IG; drop <code>#fyp</code>.</li>
+          <li><b>Build Story Highlights</b> (you have 0): Stay · Book Now · Glamping (soon) · Animals · Reviews · Events.</li>
+          <li><b>Carousels</b> for the stay experience — the most saves.</li>
+          <li>Always <b>tag Monroe, TN.</b></li>
+        </ul>
       </div>
-      <div class="stat fb">
-        <div class="plat"><span class="dot dead"></span>Facebook &middot; local board</div>
-        <div class="num">&mdash;</div>
-        <div class="meta">Login-gated, no live metrics. SERP shows 12 likes; bio still says "moving to TN."</div>
+      <div class="col"><h4><span class="tag2 fb2">Facebook</span> — local &amp; booking</h4>
+        <ul>
+          <li><b>3–4 posts a week</b> — photo + a story-style caption + a booking link.</li>
+          <li>Use <b>Facebook Events</b> for anything happening on-site.</li>
+          <li><b>Share into local / TN travel &amp; RV groups</b> — huge free reach.</li>
+          <li>Reply to every comment &amp; message quickly.</li>
+          <li>Fix the stale bio (“moving to TN” → arrived + glamping coming).</li>
+        </ul>
       </div>
-      <div class="stat gap">
-        <div class="plat"><span class="dot alert"></span>Days since last IG post</div>
-        <div class="num">24 <span class="chip alertc">stalled</span></div>
-        <div class="meta">Newest post 06-19 (piglets, 3 likes). Pipeline paused 3+ weeks.</div>
-      </div>
+    </div>
+    <p style="font-size:12.5px;color:var(--soft);margin-top:8px;">Film once, post everywhere — but <b>re-write the caption for each app</b> (short + emoji on IG/TikTok, a bit more story + a clear link on FB) and strip the watermark for IG. One farm walk = 10+ clips = a full week across all three.</p>
+
+    <h3 class="ph">3 · How often</h3>
+    <div class="cadence">
+      <div class="ccard"><div class="big">4–7</div><div class="lbl">TikTok / week</div></div>
+      <div class="ccard"><div class="big">3–5</div><div class="lbl">IG Reels / week</div></div>
+      <div class="ccard"><div class="big">Daily</div><div class="lbl">IG Stories</div></div>
+      <div class="ccard"><div class="big">3–4</div><div class="lbl">Facebook / week</div></div>
     </div>
 
-    <div class="alertbar">
-      <span class="ico">⚠️</span>
-      <div><b>Two things collide this week.</b> Instagram has gone <b>24 days</b> silent &mdash; while farm stays just became a <b>mainstream 2026 travel trend</b> (Expedia, Booking.com, ABC/GMA). The single biggest tailwind for overnight bookings is here and the feeds are quiet. Post stay content now.</div>
-    </div>
-  </div>
-
-  <!-- ============ DEMAND SIGNALS ============ -->
-  <h2>This week's demand signals</h2>
-  <div class="signals">
-    <div class="sig">
-      <div class="h"><span>🏕️ Farm-stay &amp; glamping</span><span class="arrow up">▲▲</span></div>
-      <p><b>Went mainstream.</b> Expedia + Booking.com, ABC/GMA, GLP Films &amp; The Hindu all named farm stays a 2026 trend. Plays straight to our working-farm + animals edge. <b>Act on it.</b></p>
-    </div>
-    <div class="sig">
-      <div class="h"><span>🚐 Class C RV rental</span><span class="arrow flat">▶</span></div>
-      <p><b>Band stable.</b> ~$214/night average holds across 2026 guides (To The Max RV pricing reference). No change &mdash; steady demand.</p>
-    </div>
-    <div class="sig">
-      <div class="h"><span>🎮 ModReady (mod tool)</span><span class="arrow up">▲</span></div>
-      <p><b>New organic buzz.</b> A fresh r/Bannerlord thread asked about the ModReady pack + Nexus updated 4 days ago. Product-market fit intact.</p>
-    </div>
-  </div>
-
-  <!-- ============ 5-WEEK TREND ============ -->
-  <h2>The trend (last 5 weeks)</h2>
-  <table class="trend">
-    <thead><tr><th>Week</th><th>IG followers</th><th>IG posts</th><th>IG eng.</th><th>Days quiet</th><th>TikTok (SERP)</th></tr></thead>
-    <tbody>
-      <tr><td>06-11</td><td>74</td><td>107</td><td class="muted">&mdash;</td><td class="muted">&mdash;</td><td>14K <span class="muted">(carried)</span></td></tr>
-      <tr><td>06-22</td><td>77</td><td>109</td><td>5.68%</td><td>3</td><td>~11.9K*</td></tr>
-      <tr><td>06-29</td><td>77</td><td>109</td><td>5.84%</td><td>10</td><td>~11.9K*</td></tr>
-      <tr><td>07-06</td><td>76</td><td>109</td><td>5.92%</td><td>17</td><td>~11.9K*</td></tr>
-      <tr><td>07-13</td><td>76</td><td>109</td><td>5.92%</td><td>24</td><td>~11.9K*</td></tr>
-    </tbody>
-  </table>
-  <p style="font-size:11.5px;color:var(--soft);margin:6px 0 0;">*TikTok figure is an unverified search snippet, identical 4 weeks running &mdash; the live data source has been down since 06-11. The real follower count is unknown until we wire a counter (see priorities). The story in the numbers: <b>followers essentially flat, and the account has gone quiet</b> &mdash; growth stalls when posting stalls.</p>
-
-  <!-- ============ PRIORITY ACTIONS ============ -->
-  <h2>Do these first &mdash; ranked</h2>
-  <ol class="actions">
-    <li class="hot"><b>Break the Instagram silence today.</b><span class="why">24 days with no post; the pipeline's been paused 3+ weeks. Post one herd clip now, then hold a steady every-few-days cadence &mdash; growth follows posting.</span></li>
-    <li class="win"><b>Ride the farm-stay wave.</b><span class="why">Overnight stays are a named mainstream 2026 trend right now. Post "wake up at the farm" stay content + a booking beat this week while the window is open.</span></li>
-    <li><b>Fix the booking funnel</b> (still unfixed 6 weeks).<span class="why">Build the IG Story Highlights shelf (0 today: Stay · Book Now · Glamping-soon · Animals · Reviews · Events), add one tracked booking link to all three bios pointed at the Alpaca Walk ($50), and stand up a free tent waitlist form.</span></li>
-    <li><b>Repair TikTok measurement.</b><span class="why">The live data source has failed 6 weeks straight, so we can't trend the biggest audience. Wire a counter (tokcount / exolyt) so the engine is actually monitored.</span></li>
-    <li><b>Rewrite the stale Facebook bio.</b><span class="why">Still reads "moving to TN." Update to "arrived + glamping coming," add a booking link, and start sharing into local / TN travel &amp; RV groups.</span></li>
-  </ol>
-
-  <p class="lead" style="margin-top:18px;"><b>The playbook below</b> is how you execute all of that. The rule: ~75&ndash;90% cute animals, entertainment &amp; connection &middot; ~10&ndash;25% "you can stay here." People follow for the alpacas; they book because the experience and the reviews made them trust you.</p>
-
-  <h2>Each feed has one job</h2>
-  <div class="roles">
-    <div class="role tt"><span class="tag">TikTok · @tapestry.acres</span><p><b>The engine.</b> The real audience (~12&ndash;14K). Where new people find the farm. Priority for time.</p></div>
-    <div class="role ig"><span class="tag">Instagram · @tapestryacres</span><p><b>The storefront.</b> Where a guest checks "is this place legit?" before they book a stay.</p></div>
-    <div class="role fb"><span class="tag">Facebook · /tapestryacres</span><p><b>The local board.</b> Older, nearer, more booking-intent. Events &amp; TN travel/RV groups.</p></div>
-  </div>
-
-  <h2>1 &middot; What to post about (the mix)</h2>
-  <table>
-    <thead><tr><th>Content pillar</th><th style="text-align:center">Share</th><th>Its job</th></tr></thead>
-    <tbody>
-      <tr><td class="bucket">Animals / the herd<small>baby alpacas, highland-cow treats, antics, pigs &amp; goats</small></td><td class="share">45%</td><td>The reach engine &mdash; most saves &amp; shares. Built the whole TikTok following. Cute hook in the <b>first second</b>.</td></tr>
-      <tr><td class="bucket">The stay experience<small>morning-with-animals, the view, cabins, glamping, firepit, RV sites</small></td><td class="share">25%</td><td>The "I want to be there" post &mdash; this is what actually drives bookings. <b>The currently-missing pillar.</b></td></tr>
-      <tr><td class="bucket">Behind-the-scenes / farm life<small>chores, births, shearing, weather, the family</small></td><td class="share">15%</td><td>Authenticity &amp; connection &mdash; a real place with real people, not a listing.</td></tr>
-      <tr><td class="bucket">Guest photos / reviews<small>reposts, testimonials, tagged stays</small></td><td class="share">10%</td><td>Social proof = the conversion post. The cheapest content you'll ever make.</td></tr>
-      <tr><td class="bucket">Booking / promo &amp; local events<small>availability, offers, Food Truck Saturdays, seasonal</small></td><td class="share">5%</td><td>The direct ask &mdash; kept light so the feed never feels salesy. Wrap every promo in an animal moment.</td></tr>
-    </tbody>
-  </table>
-  <p style="font-size:12.5px;color:var(--soft);margin-top:8px;"><b>1 in 4 videos ends on a booking beat</b> pointed at what the link can <i>actually</i> sell today &mdash; the <b>Alpaca Walk ($50)</b> &mdash; or "comment WAITLIST" for the glamping tents. Never imply the tents are bookable yet (permitting).</p>
-
-  <h2>2 &middot; How to run each feed</h2>
-  <div class="cols">
-    <div class="col tt">
-      <h3><span class="tag">TikTok</span><br>The growth engine</h3>
-      <ul>
-        <li><b>4&ndash;7 posts / week</b> &mdash; rewards volume + consistency.</li>
-        <li><b>Lo-fi beats polished.</b> Wrap promos inside an animal moment.</li>
-        <li><b>Cute hook in the first second;</b> trending sounds.</li>
-        <li><b>Pin 2&ndash;3 videos</b> up top (one "book a walk," one "glamping soon").</li>
-        <li><b>Reply with video</b> &mdash; free reach.</li>
-        <li>Geo-caption: "2 hrs from Nashville," "near Dale Hollow Lake."</li>
+    <h3 class="ph">4 · Easy repeating series</h3>
+    <div class="tip">
+      <ul style="margin:0">
+        <li><b>“Wake up at Tapestry Acres”</b> — sunrise + animals. The stay pillar in one repeatable format.</li>
+        <li><b>“Meet the Herd Monday”</b> — one named animal each week (rotate the whole herd, never run out).</li>
+        <li><b>A single alpaca's POV</b> — an ongoing character people follow.</li>
+        <li><b>“Building our glamping site”</b> — document the tent build with a WAITLIST call-to-action.</li>
       </ul>
     </div>
-    <div class="col ig">
-      <h3><span class="tag">Instagram</span><br>The booking storefront</h3>
-      <ul>
-        <li><b>3&ndash;5 Reels / week</b> + <b>Stories daily.</b></li>
-        <li><b>Watermark-free</b> &mdash; export from CapCut/originals, never a TikTok download.</li>
-        <li><b>Re-caption native;</b> drop <code>#fyp</code>.</li>
-        <li><b>Build Story Highlights</b> (0 today): Stay · Book Now · Glamping (soon) · Animals · Reviews · Events.</li>
-        <li><b>Carousels</b> for the stay experience &mdash; most saves.</li>
-        <li>Always <b>geo-tag Monroe, TN.</b></li>
-      </ul>
+
+    <h3 class="ph">5 · Two-week calendar</h3>
+    <div class="dailynote"><b>Do these two things every single day, on top of the grid:</b> ① post 1–3 Instagram <b>Stories</b> (a herd clip, a poll, “good morning from the farm,” or a Book-Now sticker) · ② <b>reply to every comment &amp; message</b> across all three apps (on TikTok, reply with a video when you can). The grid below is your planned, made-ahead posts.</div>
+
+    <div class="weekhead">Week 1</div>
+    <table class="cal"><thead><tr><th class="day">Day</th><th>What to post</th></tr></thead><tbody>
+      <tr><td class="day">Mon</td><td><ul><li><span class="p all">TikTok + IG</span> — <b>Meet the Herd Monday</b>: spotlight one alpaca + a “guess who” Story poll.</li><li><span class="p fb">FB</span> — same clip, warmer story-style caption.</li></ul></td></tr>
+      <tr><td class="day">Tue</td><td><ul><li><span class="p all">TikTok + IG</span> — <b>Wake up at Tapestry Acres</b> (sunrise + animals). <span class="book">Booking beat: “link in bio to book an Alpaca Walk.”</span></li><li><span class="p ig">IG</span> — add today's clip to the <b>Stay</b> Highlight.</li></ul></td></tr>
+      <tr><td class="day">Wed</td><td><ul><li><span class="p tt">TikTok</span> — alpaca antics, the herd being silly (pure reach, no ask).</li><li><span class="p fb">FB</span> — behind-the-scenes photo: morning chores / feeding.</li></ul></td></tr>
+      <tr><td class="day">Thu</td><td><ul><li><span class="p ig">IG</span> — carousel: “3 things you didn't know about alpacas” (saves).</li><li><span class="p tt">TikTok</span> — turn that carousel into a quick talking-head or photo clip.</li></ul></td></tr>
+      <tr><td class="day">Fri</td><td><ul><li><span class="p all">TikTok + IG</span> — <b>Building the glamping site</b>: “comment WAITLIST and we'll tell you the day you can book.”</li><li><span class="p fb">FB</span> — post next Food Truck Saturday as a <b>Facebook Event.</b></li></ul></td></tr>
+      <tr><td class="day">Sat</td><td><ul><li><span class="p all">TikTok + IG</span> — Food Truck Saturday: smashburgers + animals, live Stories through the day.</li><li><span class="p fb">FB</span> — “open today 11–7” post + share into 1–2 local groups.</li></ul></td></tr>
+      <tr><td class="day">Sun</td><td><ul><li><span class="p tt">TikTok</span> — firepit / sunset over the property (the stay mood).</li><li><span class="p ig">IG</span> — repost a guest photo or 5-star review + add to the <b>Reviews</b> Highlight.</li></ul></td></tr>
+    </tbody></table>
+
+    <div class="weekhead">Week 2</div>
+    <table class="cal"><thead><tr><th class="day">Day</th><th>What to post</th></tr></thead><tbody>
+      <tr><td class="day">Mon</td><td><ul><li><span class="p all">TikTok + IG</span> — <b>Meet the Herd Monday</b>: next animal + a “name the baby” poll.</li><li><span class="p fb">FB</span> — cross-post with a local caption; tag Monroe, TN.</li></ul></td></tr>
+      <tr><td class="day">Tue</td><td><ul><li><span class="p all">TikTok + IG</span> — “what a farm stay actually includes.” <span class="book">Booking beat.</span></li><li><span class="p ig">IG</span> — check the bio link works; update the <b>Book Now</b> Highlight.</li></ul></td></tr>
+      <tr><td class="day">Wed</td><td><ul><li><span class="p tt">TikTok</span> — highland-cow treat moment (proven winner).</li><li><span class="p fb">FB</span> — “things to do near Tapestry” + link the Explore-the-Area map.</li></ul></td></tr>
+      <tr><td class="day">Thu</td><td><ul><li><span class="p ig">IG</span> — carousel: property / cabin tour — “you could wake up here.”</li><li><span class="p tt">TikTok</span> — RV-site spotlight, quick walkthrough.</li></ul></td></tr>
+      <tr><td class="day">Fri</td><td><ul><li><span class="p all">TikTok + IG</span> — “a day in the life on the farm” (the family — builds trust).</li><li><span class="p fb">FB</span> — weekend Food Truck / event reminder.</li></ul></td></tr>
+      <tr><td class="day">Sat</td><td><ul><li><span class="p all">TikTok + IG</span> — Alpaca Walk in action + “link in bio to book.” <span class="book">Booking beat.</span></li><li><span class="p all">All</span> — ask on-site guests for a Google review before they leave.</li></ul></td></tr>
+      <tr><td class="day">Sun</td><td><ul><li><span class="p ig">IG</span> — guest testimonial graphic + a soft weekend booking nudge.</li><li><span class="p all">All</span> — 15-min batch-film session on a farm walk = next week's clips.</li></ul></td></tr>
+    </tbody></table>
+    <p style="font-size:12px;color:var(--soft);margin:6px 0 0;"><b>Rotate Monday spotlights through the herd</b> — Solomon · ET · Penelope · Murphy · the kunekune pigs · the goslings · the Nigerian dwarf goats — you'll never run out.</p>
+
+    <h3 class="ph">6 · Hashtags</h3>
+    <div class="cols">
+      <div class="col"><h4><span class="tag2 tt2">TikTok</span> — broad + niche, volume is fine</h4><p style="margin:0;font-family:Consolas,Menlo,monospace;font-size:12px;line-height:1.6;word-break:break-word;">#tapestryacres #alpacas #alpacasoftiktok #highlandcows #farmvisits #fyp #farmstay #glamping #dalehollowlake #tennesseetravel</p></div>
+      <div class="col"><h4><span class="tag2 ig2">Instagram</span> — 10–15 specific tags, <b>no</b> #fyp</h4><p style="margin:0;font-family:Consolas,Menlo,monospace;font-size:12px;line-height:1.6;word-break:break-word;">#tapestryacres #alpacasofinstagram #alpacafarm #highlandcowsofinstagram #glamping #farmstay #tennesseeglamping #visittennessee #uppercumberland #dalehollowlake #weekendgetaway</p></div>
+      <div class="col"><h4><span class="tag2 fb2">Facebook</span> — tags barely matter</h4><ul><li>Just <b>1–3</b>: #TapestryAcres · #DaleHollowLake · #VisitTennessee</li><li>Real reach = <b>Events</b> + posting into <b>local / TN travel &amp; RV groups.</b></li></ul></div>
     </div>
-    <div class="col fb">
-      <h3><span class="tag">Facebook</span><br>Local &amp; booking-intent</h3>
-      <ul>
-        <li><b>3&ndash;4 posts / week</b> &mdash; photo + story-driven captions + booking links.</li>
-        <li>Use <b>Facebook Events</b> for anything on-site.</li>
-        <li><b>Share into local / TN travel &amp; RV groups</b> &mdash; outsized free reach.</li>
-        <li>Reply to every comment &amp; DM fast.</li>
-        <li>Fix the stale bio ("moving to TN" &rarr; arrived + glamping coming).</li>
-      </ul>
-    </div>
-  </div>
-  <p style="font-size:12.5px;color:var(--soft);margin-top:8px;">Film once, post everywhere &mdash; but <b>re-caption per platform</b> (short + emoji on IG/TikTok, a bit more narrative + a clear link on FB) and strip the watermark for IG. One farm walk = 10+ clips = a week across all three.</p>
 
-  <h2>3 &middot; How often</h2>
-  <div class="cadence">
-    <div class="card"><div class="big">4&ndash;7</div><div class="lbl">TikTok / week</div></div>
-    <div class="card"><div class="big">3&ndash;5</div><div class="lbl">IG Reels / week</div></div>
-    <div class="card"><div class="big">Daily</div><div class="lbl">IG Stories</div></div>
-    <div class="card"><div class="big">3&ndash;4</div><div class="lbl">FB / week</div></div>
-  </div>
-
-  <h2>4 &middot; Recurring series (the cheapest content there is)</h2>
-  <div class="tip">
-    <ul style="margin:0">
-      <li><b>"Wake up at Tapestry Acres"</b> &mdash; sunrise + animals. The stay pillar in one repeatable format.</li>
-      <li><b>"Meet the Herd Monday"</b> &mdash; one named animal a week (rotate the whole herd, never run out).</li>
-      <li><b>A single alpaca's POV</b> &mdash; an ongoing character the audience follows.</li>
-      <li><b>"Building our glamping site"</b> &mdash; document the tent build with a WAITLIST call-to-action.</li>
-    </ul>
-  </div>
-
-  <h2>5 &middot; Two-week calendar &mdash; a couple of tasks a day</h2>
-  <div class="dailynote"><b>Do these two things every single day, on top of the grid:</b> ① post 1&ndash;3 Instagram <b>Stories</b> (a herd clip, a poll, "good morning from the farm," or a Book-Now sticker) &nbsp;·&nbsp; ② <b>reply to every comment &amp; DM</b> across all three apps (on TikTok, reply with a video when you can). The grid below is the planned, made-ahead posts.</div>
-
-  <div class="weekhead">Week 1</div>
-  <table class="cal">
-    <thead><tr><th class="day">Day</th><th>Today's tasks</th></tr></thead>
-    <tbody>
-      <tr><td class="day">Mon</td><td><ul>
-        <li><span class="p all">TikTok + IG</span> &mdash; <b>Meet the Herd Monday</b> Reel: spotlight one alpaca + a "guess who" Story poll.</li>
-        <li><span class="p fb">FB</span> &mdash; share the same clip with a warmer, story-style caption.</li>
-      </ul></td></tr>
-      <tr><td class="day">Tue</td><td><ul>
-        <li><span class="p all">TikTok + IG</span> &mdash; <b>Wake up at Tapestry Acres</b> (sunrise + animals). <span class="book">Booking beat: "link in bio to book an Alpaca Walk."</span></li>
-        <li><span class="p ig">IG</span> &mdash; add today's clip to the <b>Stay</b> Story Highlight.</li>
-      </ul></td></tr>
-      <tr><td class="day">Wed</td><td><ul>
-        <li><span class="p tt">TikTok</span> &mdash; alpaca antics, the herd being silly (pure reach, no ask).</li>
-        <li><span class="p fb">FB</span> &mdash; behind-the-scenes photo: morning chores / feeding.</li>
-      </ul></td></tr>
-      <tr><td class="day">Thu</td><td><ul>
-        <li><span class="p ig">IG</span> &mdash; carousel: "3 things you didn't know about alpacas" (saves).</li>
-        <li><span class="p tt">TikTok</span> &mdash; repurpose the carousel as a quick talking-head or photo-motion clip.</li>
-      </ul></td></tr>
-      <tr><td class="day">Fri</td><td><ul>
-        <li><span class="p all">TikTok + IG</span> &mdash; <b>Building the glamping site</b> Reel: "comment WAITLIST and we'll tell you the day you can book."</li>
-        <li><span class="p fb">FB</span> &mdash; post next Food Truck Saturday as a <b>Facebook Event.</b></li>
-      </ul></td></tr>
-      <tr><td class="day">Sat</td><td><ul>
-        <li><span class="p all">TikTok + IG</span> &mdash; Food Truck Saturday: smashburgers + animals, live Stories through the day.</li>
-        <li><span class="p fb">FB</span> &mdash; "open today 11&ndash;7" post + share into 1&ndash;2 local groups.</li>
-      </ul></td></tr>
-      <tr><td class="day">Sun</td><td><ul>
-        <li><span class="p tt">TikTok</span> &mdash; firepit / sunset over the property (the stay mood).</li>
-        <li><span class="p ig">IG</span> &mdash; repost a guest photo or a 5-star review to the feed + <b>Reviews</b> Highlight.</li>
-      </ul></td></tr>
-    </tbody>
-  </table>
-
-  <div class="weekhead">Week 2</div>
-  <table class="cal">
-    <thead><tr><th class="day">Day</th><th>Today's tasks</th></tr></thead>
-    <tbody>
-      <tr><td class="day">Mon</td><td><ul>
-        <li><span class="p all">TikTok + IG</span> &mdash; <b>Meet the Herd Monday</b>: next animal + a "name the baby" poll.</li>
-        <li><span class="p fb">FB</span> &mdash; cross-post with a local caption; tag Monroe, TN.</li>
-      </ul></td></tr>
-      <tr><td class="day">Tue</td><td><ul>
-        <li><span class="p all">TikTok + IG</span> &mdash; "What a farm stay actually includes." <span class="book">Booking beat.</span></li>
-        <li><span class="p ig">IG</span> &mdash; check the tracked bio link is working; update the <b>Book Now</b> Highlight.</li>
-      </ul></td></tr>
-      <tr><td class="day">Wed</td><td><ul>
-        <li><span class="p tt">TikTok</span> &mdash; highland-cow treat moment (proven winner).</li>
-        <li><span class="p fb">FB</span> &mdash; "things to do near Tapestry" + link the Explore-the-Area map.</li>
-      </ul></td></tr>
-      <tr><td class="day">Thu</td><td><ul>
-        <li><span class="p ig">IG</span> &mdash; carousel: property / cabin tour &mdash; "you could wake up here."</li>
-        <li><span class="p tt">TikTok</span> &mdash; RV-site spotlight, quick walkthrough.</li>
-      </ul></td></tr>
-      <tr><td class="day">Fri</td><td><ul>
-        <li><span class="p all">TikTok + IG</span> &mdash; "a day in the life on the farm" (the family &mdash; builds trust).</li>
-        <li><span class="p fb">FB</span> &mdash; post the weekend's Food Truck / event reminder.</li>
-      </ul></td></tr>
-      <tr><td class="day">Sat</td><td><ul>
-        <li><span class="p all">TikTok + IG</span> &mdash; Alpaca Walk in action + "link in bio to book." <span class="book">Booking beat.</span></li>
-        <li><span class="p all">All</span> &mdash; ask on-site guests for a Google review before they leave.</li>
-      </ul></td></tr>
-      <tr><td class="day">Sun</td><td><ul>
-        <li><span class="p ig">IG</span> &mdash; guest testimonial graphic + a soft weekend booking nudge.</li>
-        <li><span class="p all">All</span> &mdash; 15-min batch-film session on a farm walk = next week's clips.</li>
-      </ul></td></tr>
-    </tbody>
-  </table>
-  <p style="font-size:12px;color:var(--soft);margin:6px 0 0;"><b>Rotate Monday spotlights through the herd</b> &mdash; Solomon · ET · Penelope · Murphy · the kunekune pigs · the goslings · the Nigerian dwarf goats &mdash; you'll never run out.</p>
-
-  <h2>6 &middot; Hashtag sets</h2>
-  <div class="cols">
-    <div class="col tt">
-      <h3><span class="tag">TikTok</span><br>Broad + niche &mdash; volume is fine</h3>
-      <p style="margin:0;font-family:Consolas,Menlo,monospace;font-size:12px;line-height:1.6;word-break:break-word;">#tapestryacres #alpacas #alpacasoftiktok #highlandcows #farmvisits #fyp #farmstay #glamping #dalehollowlake #tennesseetravel</p>
-    </div>
-    <div class="col ig">
-      <h3><span class="tag">Instagram</span><br>10&ndash;15 specific tags &mdash; <b>no</b> #fyp</h3>
-      <p style="margin:0;font-family:Consolas,Menlo,monospace;font-size:12px;line-height:1.6;word-break:break-word;">#tapestryacres #alpacasofinstagram #alpacafarm #highlandcowsofinstagram #glamping #farmstay #tennesseeglamping #visittennessee #uppercumberland #dalehollowlake #weekendgetaway</p>
-    </div>
-    <div class="col fb">
-      <h3><span class="tag">Facebook</span><br>Tags barely matter</h3>
-      <ul>
-        <li>Just <b>1&ndash;3</b>: #TapestryAcres · #DaleHollowLake · #VisitTennessee</li>
-        <li>Real reach = <b>Events</b> + posting into <b>local / TN travel &amp; RV groups.</b></li>
-      </ul>
-    </div>
-  </div>
-
-  <h2>7 &middot; Turn views into bookings (do these first)</h2>
-  <div class="cols">
-    <div class="col">
-      <h3>The funnel fixes</h3>
-      <ul>
-        <li><b>One tracked link</b> in all three bios (Linktree / Stan + UTM) &rarr; the <b>Alpaca Walk ($50)</b> &mdash; the best <i>actually-live</i> product. Graduate to cabins, then tents, as each becomes bookable.</li>
-        <li><b>Stand up a tent waitlist</b> (free Wix form) and link it &mdash; bank the demand now.</li>
-        <li><b>Build the IG Story Highlights shelf</b> &mdash; Stay, Book Now, Glamping (soon), Animals, Reviews, Events.</li>
-        <li><b>Rewrite all three bios</b> &mdash; value prop + location + CTA, each pointing at the others.</li>
-      </ul>
-    </div>
-    <div class="col">
-      <h3>Keep the engine fed</h3>
-      <ul>
+    <h3 class="ph">7 · Turn views into bookings</h3>
+    <div class="cols">
+      <div class="col"><h4>Fix the funnel</h4><ul>
+        <li><b>One tracked link</b> in all three bios (Linktree / Stan) → the <b>Alpaca Walk ($50)</b>, your best actually-live product. Add cabins, then tents, as each becomes bookable.</li>
+        <li><b>Stand up a tent waitlist</b> (free Wix form) and link it — bank the demand now.</li>
+        <li><b>Build the IG Story Highlights row</b> — Stay, Book Now, Glamping (soon), Animals, Reviews, Events.</li>
+        <li><b>Rewrite all three bios</b> — what you are + where + a call to action, each pointing at the others.</li>
+      </ul></div>
+      <div class="col"><h4>Keep the engine fed</h4><ul>
         <li><b>Batch-film.</b> One walk = a week across all three feeds.</li>
-        <li><b>Don't go quiet.</b> The current gap is cadence &mdash; keep something posting every few days.</li>
-        <li><b>Ask every guest for a Google review</b> (4.3&#9733; &rarr; 4.5&#9733; / 25+) &mdash; cheapest, best-converting content.</li>
+        <li><b>Don't go quiet.</b> Your one real problem is cadence — keep something posting every few days.</li>
+        <li><b>Ask every guest for a Google review</b> (4.3★ → 4.5★ / 25+) — cheapest, best-converting content there is.</li>
         <li><b>Hook in the first second;</b> wrap every promo in an animal moment.</li>
-      </ul>
+      </ul></div>
     </div>
   </div>
 
   <footer>
-    <span>Tapestry Acres &mdash; Social Media Dashboard · Facebook · Instagram · TikTok</span>
-    <span>Updated 2026-07-13 &middot; snapshot auto-refreshed by the weekly pulse</span>
+    <span>Tapestry Acres — Social Media Dashboard · Facebook · Instagram · TikTok</span>
+    <span id="foot-updated">—</span>
   </footer>
 
 </div>
-<script>if(new URLSearchParams(location.search).has('print')){addEventListener('load',function(){setTimeout(function(){window.print()},450)})}</script>
+
+<!-- fallback data (used if social-data.json can't be fetched, e.g. opened as a file) -->
+<script id="seed" type="application/json">{"updated":"2026-07-13","updatedLabel":"July 13, 2026","source":"weekly social pulse","greeting":"Here's where your social stands","platforms":{"tiktok":{"label":"TikTok","handle":"@tapestry.acres","role":"Your growth engine — where new people find the farm","followers":11900,"approx":true,"verified":false,"status":"warn","statusText":"Can't read live count","plain":"We haven't been able to pull a live number for 6 weeks — TikTok keeps blocking the counter. Last we saw: about 11,900. Top recent video got 146 likes."},"instagram":{"label":"Instagram","handle":"@tapestryacres","role":"Your storefront — where guests check you out before booking","followers":76,"deltaFollowers":0,"posts":109,"engagement":5.92,"highlights":0,"status":"warn","statusText":"Flat this week","plain":"76 followers, 109 posts, 5.9% engagement — everything is exactly the same as last week. Nothing has moved because nothing has been posted."},"facebook":{"label":"Facebook","handle":"/tapestryacres","role":"Your local board — older, nearer, ready to book","followers":null,"status":"dead","statusText":"Can't see the numbers","plain":"Facebook hides these numbers unless you're logged in as the page. The public page shows 12 likes and a bio that still says “moving to TN.”"}},"health":{"daysSinceLastPost":24,"lastPostDate":"June 19","status":"alert","statusText":"Posting has stalled","plain":"It's been 24 days since your last Instagram post (June 19 — the piglets). The account has gone quiet for 3+ weeks."},"headline":"Two things are colliding this week: your feeds have gone quiet for 24 days, right as farm stays became a mainstream 2026 travel trend. The single best moment to sell overnight stays is here — and nothing is posting.","actions":[{"level":"now","title":"Post to Instagram today","why":"It's been 24 days. Put up one animal clip right now — accounts grow when they post, and yours has been silent for three weeks. Then keep something going every few days."},{"level":"win","title":"Jump on the farm-stay trend","why":"Farm stays are officially a big 2026 travel trend this week — Expedia, Booking.com and ABC News all said so. Post a “wake up on the farm” video and tell people they can come visit."},{"level":"todo","title":"Build your booking path","why":"Add a Story Highlights row on Instagram (you have none), put one booking link in all three bios pointing at the $50 Alpaca Walk, and make a simple waitlist form for the glamping tents."},{"level":"todo","title":"Get TikTok counting again","why":"We've been unable to read your TikTok follower count for six weeks straight. Hook up a counter so your biggest audience is actually being tracked."},{"level":"todo","title":"Freshen up Facebook","why":"The bio still says “moving to TN.” Update it, add a booking link, and start sharing posts into local Tennessee travel & RV groups."}],"signals":[{"icon":"🏕️","title":"Farm stays & glamping","trend":"up2","trendLabel":"Heating up fast","text":"Just went mainstream for 2026 — Expedia, Booking.com, ABC News and more all named farm stays a top trend this week. Best moment yet to push overnight stays."},{"icon":"🚐","title":"RV rentals (To The Max)","trend":"flat","trendLabel":"Steady","text":"Holding at about $214 a night across the 2026 guides — a solid, reliable price to rent your Class C at. No change this week."},{"icon":"🎮","title":"ModReady (mod tool)","trend":"up1","trendLabel":"Picking up","text":"Someone on Reddit asked about the ModReady pack this week and the download page just updated — good sign people are looking for it."}],"trend":[{"week":"Jun 11","igFollowers":74,"igPosts":107,"igEng":null,"daysQuiet":0,"tiktok":"14K"},{"week":"Jun 22","igFollowers":77,"igPosts":109,"igEng":5.68,"daysQuiet":3,"tiktok":"~11.9K"},{"week":"Jun 29","igFollowers":77,"igPosts":109,"igEng":5.84,"daysQuiet":10,"tiktok":"~11.9K"},{"week":"Jul 6","igFollowers":76,"igPosts":109,"igEng":5.92,"daysQuiet":17,"tiktok":"~11.9K"},{"week":"Jul 13","igFollowers":76,"igPosts":109,"igEng":5.92,"daysQuiet":24,"tiktok":"~11.9K"}],"trendNote":"The story in one line: your follower count is flat and the account has gone quiet. Growth stalls when posting stalls — that's the pattern to break."}</script>
+
+<script>
+(function(){
+  var statusText={ok:"ok",warn:"warn",alert:"alert",dead:"dead"};
+
+  function fmtFollowers(n,approx){
+    if(n===null||n===undefined) return {big:"—",unit:"",q:false};
+    if(n>=1000){ return {big:(n/1000).toFixed(n%1000?1:0), unit:"K", q:approx}; }
+    return {big:String(n), unit:"", q:false};
+  }
+
+  function animateNum(el,target,opts){
+    opts=opts||{}; var dur=900, start=performance.now(), dp=opts.decimals||0;
+    var from=0;
+    function step(t){
+      var p=Math.min(1,(t-start)/dur); var e=1-Math.pow(1-p,3);
+      var v=from+(target-from)*e;
+      el.textContent=(dp?v.toFixed(dp):Math.round(v)).toString();
+      if(p<1) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  }
+
+  function kpiCard(cls,d,opts){
+    opts=opts||{};
+    var f=fmtFollowers(d.followers,d.approx);
+    var numHtml;
+    if(f.big==="—"){ numHtml='<span class="num">—</span>'; }
+    else {
+      numHtml='<span class="num"><span class="cnt" data-target="'+opts.animTarget+'" data-dec="'+(opts.decimals||0)+'">0</span>'
+        +(f.unit?'<span class="unit">'+f.unit+'</span>':'')
+        +(f.q?'<span class="q"> ?</span>':'')+'</span>';
+    }
+    return '<div class="kpi '+cls+'">'
+      +'<div class="top"><span class="plat"><span class="badge">'+opts.badge+'</span>'+d.label+'</span>'
+      +'<span class="pill '+statusText[d.status]+'"><span class="d"></span>'+d.statusText+'</span></div>'
+      +numHtml
+      +'<div class="sub">'+d.plain+'</div>'
+      +'<div class="role">'+ (opts.roleOverride||d.role||"") +'</div>'
+      +'</div>';
+  }
+
+  function render(data){
+    document.getElementById('up-date').textContent=data.updatedLabel;
+    document.getElementById('greeting').textContent=data.greeting;
+    document.getElementById('hero-date').textContent='Your weekly read for '+data.updatedLabel+' — pulled from the '+data.source+'.';
+    document.getElementById('headline').textContent=data.headline;
+    document.getElementById('foot-updated').textContent='Updated '+data.updatedLabel+' · counts auto-refresh from the daily pulse';
+
+    var p=data.platforms;
+    // health card reuses kpi shape
+    var health={label:"Posting health",followers:data.health.daysSinceLastPost,status:data.health.status,statusText:data.health.statusText,plain:data.health.plain,role:"Last post: "+data.health.lastPostDate};
+    var khtml=''
+      +kpiCard('tt',p.tiktok,{badge:'♪',animTarget:11.9,decimals:1})
+      +kpiCard('ig',p.instagram,{badge:'◎',animTarget:p.instagram.followers})
+      +kpiCard('fb',p.facebook,{badge:'f'})
+      +kpiCard('health',health,{badge:'!',animTarget:data.health.daysSinceLastPost,roleOverride:"Last post: "+data.health.lastPostDate});
+    document.getElementById('kpis').innerHTML=khtml;
+
+    // animate counts
+    document.querySelectorAll('.cnt').forEach(function(el){
+      animateNum(el, parseFloat(el.getAttribute('data-target')), {decimals:parseInt(el.getAttribute('data-dec'),10)});
+    });
+
+    // actions
+    var marks={now:'!',win:'✓',todo:'→'}, tags={now:'Do now',win:'Big win',todo:'To-do'};
+    document.getElementById('actions').innerHTML=data.actions.map(function(a){
+      return '<li class="act '+a.level+'"><span class="mark">'+marks[a.level]+'</span>'
+        +'<div class="body"><div class="t">'+a.title+' <span class="tag '+a.level+'">'+tags[a.level]+'</span></div>'
+        +'<div class="why">'+a.why+'</div></div></li>';
+    }).join('');
+
+    // signals
+    var arrows={up2:'▲▲',up1:'▲',flat:'▶'};
+    document.getElementById('signals').innerHTML=data.signals.map(function(s){
+      return '<div class="sig"><div class="h"><span class="ico">'+s.icon+'</span><span class="nm">'+s.title+'</span>'
+        +'<span class="trendtag '+s.trend+'">'+arrows[s.trend]+' '+s.trendLabel+'</span></div>'
+        +'<p>'+s.text+'</p></div>';
+    }).join('');
+
+    // trend chart (IG followers)
+    var vals=data.trend.map(function(t){return t.igFollowers;});
+    var min=Math.min.apply(null,vals)-2, max=Math.max.apply(null,vals);
+    document.getElementById('chart').innerHTML=data.trend.map(function(t){
+      var h=Math.round(20+((t.igFollowers-min)/(max-min||1))*78);
+      return '<div class="bar-col"><span class="bar-val">'+t.igFollowers+'</span>'
+        +'<div class="bar" style="height:'+h+'%" data-h="'+h+'"></div>'
+        +'<span class="bar-wk">'+t.week+'</span></div>';
+    }).join('');
+    requestAnimationFrame(function(){ setTimeout(function(){
+      document.querySelectorAll('#chart .bar').forEach(function(b){ b.style.transform='scaleY(1)'; });
+    },60); });
+
+    // days-quiet strip
+    document.getElementById('quiet').innerHTML=data.trend.map(function(t){
+      var hot=t.daysQuiet>=17?' hot':'';
+      return '<div class="q"><div class="qn'+hot+'">'+t.daysQuiet+'</div><div class="ql">'+t.week+' · days quiet</div></div>';
+    }).join('');
+
+    document.getElementById('trendnote').innerHTML=data.trendNote;
+  }
+
+  var seed=JSON.parse(document.getElementById('seed').textContent);
+  render(seed);
+
+  // try to pull fresh daily data; re-render + re-animate if newer
+  function refresh(){
+    fetch('social-data.json?t='+Date.now()).then(function(r){return r.ok?r.json():null;}).then(function(d){
+      if(d && d.updated){ render(d); }
+    }).catch(function(){});
+  }
+  refresh();
+  setInterval(refresh, 5*60*1000); // re-check every 5 min so an open dashboard stays current
+})();
+</script>
 </body>
 </html>
