@@ -41,6 +41,7 @@
   "health": {
     "daysSinceLastPost": 24,
     "lastPostDate": "June 19",
+    "lastPostISO": "2026-06-19",
     "status": "alert",
     "statusText": "Posting has stalled",
     "plain": "It's been 24 days since your last Instagram post (June 19 — the piglets). The account has gone quiet for 3+ weeks."
