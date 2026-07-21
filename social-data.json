@@ -1,6 +1,6 @@
 {
-  "updated": "2026-07-13",
-  "updatedLabel": "July 13, 2026",
+  "updated": "2026-07-21",
+  "updatedLabel": "July 21, 2026",
   "source": "weekly social pulse",
   "greeting": "Here's where your social stands",
   "platforms": {
@@ -39,7 +39,7 @@
     }
   },
   "health": {
-    "daysSinceLastPost": 24,
+    "daysSinceLastPost": 32,
     "lastPostDate": "June 19",
     "lastPostISO": "2026-06-19",
     "status": "alert",
@@ -98,11 +98,46 @@
     }
   ],
   "trend": [
-    { "week": "Jun 11", "igFollowers": 74, "igPosts": 107, "igEng": null, "daysQuiet": 0, "tiktok": "14K" },
-    { "week": "Jun 22", "igFollowers": 77, "igPosts": 109, "igEng": 5.68, "daysQuiet": 3, "tiktok": "~11.9K" },
-    { "week": "Jun 29", "igFollowers": 77, "igPosts": 109, "igEng": 5.84, "daysQuiet": 10, "tiktok": "~11.9K" },
-    { "week": "Jul 6",  "igFollowers": 76, "igPosts": 109, "igEng": 5.92, "daysQuiet": 17, "tiktok": "~11.9K" },
-    { "week": "Jul 13", "igFollowers": 76, "igPosts": 109, "igEng": 5.92, "daysQuiet": 24, "tiktok": "~11.9K" }
+    {
+      "week": "Jun 11",
+      "igFollowers": 74,
+      "igPosts": 107,
+      "igEng": null,
+      "daysQuiet": 0,
+      "tiktok": "14K"
+    },
+    {
+      "week": "Jun 22",
+      "igFollowers": 77,
+      "igPosts": 109,
+      "igEng": 5.68,
+      "daysQuiet": 3,
+      "tiktok": "~11.9K"
+    },
+    {
+      "week": "Jun 29",
+      "igFollowers": 77,
+      "igPosts": 109,
+      "igEng": 5.84,
+      "daysQuiet": 10,
+      "tiktok": "~11.9K"
+    },
+    {
+      "week": "Jul 6",
+      "igFollowers": 76,
+      "igPosts": 109,
+      "igEng": 5.92,
+      "daysQuiet": 17,
+      "tiktok": "~11.9K"
+    },
+    {
+      "week": "Jul 13",
+      "igFollowers": 76,
+      "igPosts": 109,
+      "igEng": 5.92,
+      "daysQuiet": 32,
+      "tiktok": "~11.9K"
+    }
   ],
   "trendNote": "The story in one line: your follower count is flat and the account has gone quiet. Growth stalls when posting stalls — that's the pattern to break."
 }
