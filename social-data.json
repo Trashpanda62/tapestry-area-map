@@ -1,6 +1,6 @@
 {
-  "updated": "2026-08-09",
-  "updatedLabel": "August 9, 2026",
+  "updated": "2026-08-10",
+  "updatedLabel": "August 10, 2026",
   "source": "weekly social pulse",
   "greeting": "Here's where your social stands",
   "platforms": {
@@ -39,7 +39,7 @@
     }
   },
   "health": {
-    "daysSinceLastPost": 51,
+    "daysSinceLastPost": 52,
     "lastPostDate": "June 19",
     "lastPostISO": "2026-06-19",
     "status": "alert",
@@ -135,7 +135,7 @@
       "igFollowers": 76,
       "igPosts": 109,
       "igEng": 5.92,
-      "daysQuiet": 51,
+      "daysQuiet": 52,
       "tiktok": "~11.9K"
     }
   ],
