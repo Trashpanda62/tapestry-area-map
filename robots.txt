@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+Disallow: /social-plan.html
+Disallow: /hair-poll/HOW-TO-POST.html
+Disallow: /hair-poll/animals.html
+Disallow: /hair-poll/kit.html
+
+Sitemap: https://trashpanda62.github.io/tapestry-area-map/sitemap.xml
