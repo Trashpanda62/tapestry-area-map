@@ -7,6 +7,12 @@
 <meta name="description" content="Interactive map of lakes, waterfalls, state parks, history, food and shops within a short drive of Tapestry Acres in Monroe, Tennessee, with drive times and directions.">
 <link rel="canonical" href="https://trashpanda62.github.io/tapestry-area-map/">
 <meta name="theme-color" content="#4b6b3c">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Explore the Area: day trips near Tapestry Acres, Monroe TN">
+<meta property="og:description" content="Lakes, waterfalls, state parks, history, food and shops within a drive of Tapestry Acres, with drive times and directions.">
+<meta property="og:url" content="https://trashpanda62.github.io/tapestry-area-map/">
+<meta property="og:image" content="https://trashpanda62.github.io/tapestry-area-map/img/dale-hollow-lake.jpg">
+<meta name="twitter:card" content="summary_large_image">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%97%BA%EF%B8%8F%3C/text%3E%3C/svg%3E">
 <link rel="preconnect" href="https://unpkg.com" crossorigin>
 <link rel="preconnect" href="https://tile.openstreetmap.org">
@@ -36,8 +42,8 @@
   /* keep the sidebar a bounded, scrollable card on phones so the whole widget
      stays a predictable height when embedded in an iframe (e.g. the Wix Info page) */
   @media(max-width:760px){.side{max-height:300px;}}
-  .side h3{margin:0 0 10px;font-size:15px;color:var(--green);}
-  .hint{margin:0 0 8px;font-size:11.5px;color:var(--mut);font-style:italic;font-family:Arial,sans-serif;}
+  .side h2{margin:0 0 10px;font-size:15px;color:var(--green);}
+  .hint{margin:0 0 8px;font-size:12.5px;color:var(--mut);font-style:italic;font-family:Arial,sans-serif;}
   .legend{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px;font-family:Arial,sans-serif;}
   .lg{display:inline-flex;align-items:center;gap:5px;font-size:12px;color:var(--ink);cursor:pointer;
       background:#fff;border:1px solid var(--line);border-radius:14px;padding:7px 12px;min-height:34px;line-height:1.4;
@@ -67,7 +73,7 @@
   .pinned{background:#fbf6e9;border:1px solid #e6d9b3;border-left:4px solid var(--home);
           border-radius:12px;padding:11px 13px;margin-bottom:12px;font-family:Arial,sans-serif;}
   .pinned .pn-t{font-weight:800;font-size:13.5px;color:var(--home);cursor:pointer;}
-  .pinned .pn-d{font-size:11.5px;color:var(--mut);margin:4px 0 9px;line-height:1.4;}
+  .pinned .pn-d{font-size:12.5px;color:var(--mut);margin:4px 0 9px;line-height:1.4;}
   .pinned .pn-b{display:inline-block;background:var(--home);color:#fff;font-size:12.5px;font-weight:700;
                 text-decoration:none;border-radius:9px;padding:7px 12px;}
   .pinned .pn-b:hover{filter:brightness(1.08);}
@@ -75,7 +81,7 @@
   .pop .pd{font-size:12.5px;color:var(--ink);margin:3px 0 6px;line-height:1.35;}
   .pop a{font-size:12.5px;font-weight:700;color:#2f6a8f;text-decoration:none;}
   .leaflet-popup-content{margin:11px 13px;}
-  .credit{margin:12px 2px 0;font-size:10.5px;color:var(--mut);font-family:Arial,sans-serif;
+  .credit{margin:12px 2px 0;font-size:11.5px;color:var(--mut);font-family:Arial,sans-serif;
           font-style:italic;text-align:center;border-top:1px solid var(--line);padding-top:8px;}
   /* ---- embed mode (?embed): warm, full-bleed, sidebar-free — for the game site ---- */
   body.embed{margin:0;background:transparent}
@@ -99,7 +105,7 @@
   <div class="panel">
     <div id="map"></div>
     <div class="side">
-      <h3>Nearby favorites</h3>
+      <h2>Nearby favorites</h2>
       <p class="hint">Tap a category to filter the map</p>
       <div class="legend" id="legend">
         <button class="lg" data-cat="water"><i class="dot" style="background:var(--blue)"></i>Lake &amp; water</button>
@@ -327,7 +333,7 @@
     var img = p.img ? '<img class="pi" src="'+p.img+'" alt="'+p.n+'" loading="lazy">' : '';
     var link = p.cat==='home'
       ? '<a href="'+SAFE_DIR+'" target="_blank" rel="noopener">🚐 RV-safe directions to the farm →</a>'
-      : '<a href="'+dirUrl(p)+'" target="_blank" rel="noopener">Get directions →</a>';
+      : '<a href="'+dirUrl(p)+'" target="_blank" rel="noopener" aria-label="Get directions to '+p.n+'">Get directions →</a>';
     return '<div class="pop">'+img+'<div class="pn">'+p.n+'</div>'+chip+
            '<div class="pd">'+p.d+'</div>'+link+'</div>';
   }
