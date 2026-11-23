@@ -49,6 +49,7 @@
   .item:hover{background:var(--cream);}
   .item .nm{font-weight:700;font-size:13.5px;color:var(--ink);}
   .item .meta{font-size:12px;color:var(--mut);margin-top:1px;}
+  .item:focus-visible,.lg:focus-visible,.pn-b:focus-visible,.pinned .pn-t:focus-visible{outline:3px solid var(--blue);outline-offset:2px;}
   .pin{display:flex;align-items:center;justify-content:center;width:30px;height:30px;border-radius:50% 50% 50% 0;
        transform:rotate(-45deg);border:2px solid #fff;box-shadow:0 2px 5px rgba(0,0,0,.4);font-size:14px;}
   .pin span{transform:rotate(45deg);}
@@ -66,7 +67,7 @@
   .pinned .pn-b:hover{filter:brightness(1.08);}
   .pop .pc{display:inline-block;font-size:10.5px;color:#fff;border-radius:10px;padding:1px 8px;margin:4px 0;}
   .pop .pd{font-size:12.5px;color:var(--ink);margin:3px 0 6px;line-height:1.35;}
-  .pop a{font-size:12.5px;font-weight:700;color:var(--blue);text-decoration:none;}
+  .pop a{font-size:12.5px;font-weight:700;color:#2f6a8f;text-decoration:none;}
   .leaflet-popup-content{margin:11px 13px;}
   .credit{margin:12px 2px 0;font-size:10.5px;color:var(--mut);font-family:Arial,sans-serif;
           font-style:italic;text-align:center;border-top:1px solid var(--line);padding-top:8px;}
@@ -116,6 +117,8 @@
     history:{c:'#8a6a44'}, food:{c:'#d4803a'}, fun:{c:'#c2557a'},
     shop:{c:'#b8923a'}, town:{c:'#7b5d77'}
   };
+  // darker text-safe shades (white label text on these passes 4.5:1)
+  var CHIP = {'water': '#2f6f96', 'park': '#4f7335', 'history': '#8a6a44', 'food': '#a85a10', 'fun': '#b0436a', 'shop': '#86691b', 'town': '#7b5d77', 'home': '#c0492f'};
   var HOME = [36.4973, -85.2460]; // 396 Taylor Crossroads Rd, Monroe TN
   var PLACES = [
     {n:'Tapestry Acres', cat:'home', icon:'🏡', at:HOME, mins:'', d:'You are here — home base for your stay.'},
@@ -312,7 +315,7 @@
   }
   function popHTML(p){
     var chip = p.cat==='home' ? '' :
-      '<span class="pc" style="background:'+CAT[p.cat].c+'">'+(p.mins||'')+'</span><br>';
+      '<span class="pc" style="background:'+CHIP[p.cat]+'">'+(p.mins||'')+'</span><br>';
     var img = p.img ? '<img class="pi" src="'+p.img+'" alt="'+p.n+'" loading="lazy">' : '';
     var link = p.cat==='home'
       ? '<a href="'+SAFE_DIR+'" target="_blank" rel="noopener">🚐 RV-safe directions to the farm →</a>'
@@ -326,7 +329,7 @@
                   fun:'🎡 Family fun', shop:'🛍️ Shops & markets', town:'🏘️ Towns'};
   var markers=[], bounds=[], byCat={};
   PLACES.forEach(function(p){
-    var m = L.marker(p.at, {icon:pinIcon(p)}).addTo(map).bindPopup(popHTML(p));
+    var m = L.marker(p.at, {icon:pinIcon(p), title:p.n, alt:p.n}).addTo(map).bindPopup(popHTML(p));
     p._m=m; markers.push(m); bounds.push(p.at);
     if(p.cat!=='home'){ (byCat[p.cat]=byCat[p.cat]||[]).push(p); }
   });
@@ -336,6 +339,8 @@
   pin.innerHTML='<div class="pn-t">📍 Directions to Tapestry Acres</div>'+
     '<div class="pn-d">RVs &amp; large rigs: take the safe TN-294 / Old Stover Rd route — <b>not</b> the steep Jaybird Rd the GPS picks.</div>'+
     '<a class="pn-b" href="'+SAFE_DIR+'" target="_blank" rel="noopener">🚐 Get RV-safe directions →</a>';
+  pin.querySelector('.pn-t').tabIndex=0; pin.querySelector('.pn-t').setAttribute('role','button');
+  pin.querySelector('.pn-t').onkeydown=function(e){ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); this.click(); } };
   pin.querySelector('.pn-t').onclick=function(){ map.setView(HOME,13); PLACES[0]._m.openPopup(); };
   list.appendChild(pin);
   var CATS=['water','park','history','food','fun','shop','town'];
@@ -345,9 +350,10 @@
     var h=document.createElement('div'); h.className='grp'; h.dataset.cat=cat; h.textContent=CATLABEL[cat];
     list.appendChild(h); grpEl[cat]=h;
     byCat[cat].forEach(function(p){
-      var el=document.createElement('div'); el.className='item'; el.dataset.cat=cat;
+      var el=document.createElement('div'); el.className='item'; el.dataset.cat=cat; el.tabIndex=0; el.setAttribute('role','button');
       el.innerHTML='<div class="nm">'+p.icon+' '+p.n+'</div><div class="meta">'+p.mins+'</div>';
       el.onclick=function(){ map.setView(p.at,12); p._m.openPopup(); };
+      el.onkeydown=function(e){ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); el.onclick(); } };
       list.appendChild(el);
     });
   });
@@ -369,7 +375,7 @@
     document.querySelectorAll('.lg[data-cat]').forEach(function(b){
       var c=b.dataset.cat;
       if(c==='all') return;
-      b.classList.toggle('off', !active[c]);
+      b.classList.toggle('off', !active[c]); b.setAttribute('aria-pressed', active[c]?'true':'false');
     });
     // re-fit to whatever is showing (home always counts)
     var b=[HOME];
