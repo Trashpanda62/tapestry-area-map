@@ -22,6 +22,10 @@
   .head{text-align:center;margin-bottom:14px;}
   .head h1{font-size:clamp(22px,3.4vw,30px);margin:0 0 4px;color:var(--green);letter-spacing:.3px;}
   .head p{margin:0;color:var(--mut);font-size:15px;font-style:italic;}
+  .head .cta{margin-top:10px;font-style:normal;font-family:Arial,sans-serif;display:flex;gap:8px;justify-content:center;flex-wrap:wrap;}
+  .head .cta a{background:var(--home);color:#fff;text-decoration:none;font-weight:700;font-size:13.5px;border-radius:9px;padding:9px 14px;min-height:36px;}
+  .head .cta a+a{background:#fff;color:var(--home);border:1px solid var(--home);}
+  .head .cta a:focus-visible{outline:3px solid var(--blue);outline-offset:2px;}
   .panel{display:grid;grid-template-columns:1fr 280px;gap:16px;}
   @media(max-width:760px){.panel{grid-template-columns:1fr;}}
   #map{height:500px;border-radius:14px;border:1px solid var(--line);
@@ -90,6 +94,7 @@
   <div class="head">
     <h1>🗺️ Explore the Area</h1>
     <p>Day trips &amp; adventures a short drive from the farm</p>
+    <p class="cta"><a href="https://tapestryacres.com/stay" target="_blank" rel="noopener">Stay at Tapestry Acres</a> <a href="https://tapestryacres.com/book" target="_blank" rel="noopener">Book an experience</a></p>
   </div>
   <div class="panel">
     <div id="map"></div>
@@ -331,7 +336,7 @@
                   fun:'🎡 Family fun', shop:'🛍️ Shops & markets', town:'🏘️ Towns'};
   var markers=[], bounds=[], byCat={};
   PLACES.forEach(function(p){
-    var m = L.marker(p.at, {icon:pinIcon(p), title:p.n, alt:p.n}).addTo(map).bindPopup(popHTML(p));
+    var m = L.marker(p.at, {icon:pinIcon(p), title:p.n, alt:p.n, zIndexOffset:(p.cat==='home'?1000:0)}).addTo(map).bindPopup(popHTML(p));
     p._m=m; markers.push(m); bounds.push(p.at);
     if(p.cat!=='home'){ (byCat[p.cat]=byCat[p.cat]||[]).push(p); }
   });
@@ -401,7 +406,8 @@
   // always opens on the full regional view instead of over-zoomed.
   function fitAll(){ map.invalidateSize(); map.fitBounds(bounds, {padding:[30,30], maxZoom:11}); }
   fitAll();
-  markers[0].openPopup();
+  // the welcome popup is taller than the 320px phone map and gets clipped, so only open it on roomy layouts
+  if(document.getElementById('map').clientHeight>=450) markers[0].openPopup();
   setTimeout(fitAll, 400);
   setTimeout(fitAll, 1200);
   window.addEventListener('load', fitAll);
