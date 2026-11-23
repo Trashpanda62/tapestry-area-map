@@ -308,7 +308,7 @@
      d:'Cumberland Plateau railroad town — historic depot, the Standing Stone monument, cafés & antiques; gateway to Bee Rock, Whittaker Falls & Muddy Pond.'}
   ];
 
-  var map = L.map('map', {scrollWheelZoom:true}).setView([36.46,-85.30], 10);
+  var map = L.map('map', {scrollWheelZoom:true, zoomSnap:0.25}).setView([36.46,-85.30], 10);
   L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution:'&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> contributors', maxZoom:18
   }).addTo(map);
@@ -411,7 +411,12 @@
   });
   // Re-fit after the (often lazy-loaded / late-sized) iframe settles, so the map
   // always opens on the full regional view instead of over-zoomed.
-  function fitAll(){ map.invalidateSize(); map.fitBounds(bounds, {padding:[30,30], maxZoom:11}); }
+  // opening view: the places within about 90 minutes, so the pins near the farm are not crammed
+  // together (farther pins are still on the map; pan or tap "Show all" to see everything)
+  function minsOf(t){ var h=/(\d+)\s*hr/.exec(t||''), m=/(\d+)\s*min/.exec(t||''), x=/hr\s+(\d+)(?!\s*min)/.exec(t||'');
+    return (h?+h[1]*60:0)+(m?+m[1]:0)+(x?+x[1]:0); }
+  var NEAR=PLACES.filter(function(p){ return p.cat==='home' || minsOf(p.mins)<=90; }).map(function(p){return p.at;});
+  function fitAll(){ map.invalidateSize(); map.fitBounds(NEAR, {padding:[30,30], maxZoom:11}); }
   fitAll();
   // the welcome popup is taller than the 320px phone map and gets clipped, so only open it on roomy layouts
   if(document.getElementById('map').clientHeight>=450) markers[0].openPopup();
